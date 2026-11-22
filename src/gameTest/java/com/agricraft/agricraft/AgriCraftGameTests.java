@@ -155,8 +155,15 @@ public final class AgriCraftGameTests {
         player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 
         int stages = crop.getGrowthStage().total();
-        for (int i = 0; i < 256 && !crop.isFullyGrown(); i++) {
-            crop.applyGrowthTick();
+        var disableWeeds = AgriCraftConfig.DISABLE_WEEDS;
+        boolean originalDisableWeeds = disableWeeds.get();
+        try {
+            disableWeeds.set(true);
+            for (int i = 0; i < 256 && crop.hasPlant() && !crop.isFullyGrown(); i++) {
+                crop.applyGrowthTick();
+            }
+        } finally {
+            disableWeeds.set(originalDisableWeeds);
         }
         helper.assertTrue(crop.canBeHarvested(), "Mature crop is not harvestable: " + plantId);
         // Wheat inherits a probabilistic product table, so allow repeated harvests.
