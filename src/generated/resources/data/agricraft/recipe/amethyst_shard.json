@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": "agricraft:amathyllis_petal"
+  },
+  "pattern": [
+    "ppp",
+    "ppp",
+    "ppp"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:amethyst_shard"
+  }
+}

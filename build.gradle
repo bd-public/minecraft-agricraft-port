@@ -1,0 +1,86 @@
+plugins {
+	id 'java-library'
+	id 'idea'
+	id 'maven-publish'
+	id 'net.neoforged.moddev' version '2.0.148'
+}
+
+base {
+	archivesName = "${mod_id}-${minecraft_version}"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+repositories {
+	maven {
+		url = 'https://cursemaven.com'
+		content { includeGroup 'curse.maven' }
+	}
+}
+
+def withMysticalAgriculture = providers.gradleProperty('withMysticalAgriculture').isPresent()
+def withGameTests = providers.gradleProperty('gameTests').isPresent()
+
+sourceSets {
+	gameTest {
+		compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+	}
+}
+
+neoForge {
+	version = neoforge_version
+	mods {
+		"${mod_id}" {
+			sourceSet sourceSets.main
+			if (withGameTests) sourceSet sourceSets.gameTest
+		}
+	}
+	runs {
+		configureEach {
+			gameDirectory = project.file(withMysticalAgriculture ? 'runs/mystical' : 'runs/standalone')
+		}
+		client { client() }
+		server {
+			server()
+			programArgument '--nogui'
+		}
+		if (withGameTests) {
+			gameTestServer {
+				type = 'gameTestServer'
+				gameDirectory = project.file(withMysticalAgriculture ? 'runs/test-mystical' : 'runs/test-standalone')
+				systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+			}
+		}
+	}
+}
+
+sourceSets.main {
+	java {
+		exclude '**/compat/emi/**', '**/compat/jade/**', '**/compat/jei/**', '**/compat/wthit/**'
+		exclude '**/compat/sereneseason/**', '**/mixin/FarmersDelightMixin.java', '**/datagen/**'
+	}
+	resources { srcDir 'src/generated/resources' }
+}
+
+dependencies {
+	compileOnly 'curse.maven:mystical-agriculture-246640:9291672'
+	compileOnly 'curse.maven:cucumber-272335:9459215'
+	if (withMysticalAgriculture) {
+		runtimeOnly 'curse.maven:mystical-agriculture-246640:9291672'
+		runtimeOnly 'curse.maven:cucumber-272335:9459215'
+	}
+}
+
+tasks.withType(ProcessResources).configureEach {
+	def modMetadata = [version: project.version, minecraft_version: minecraft_version, neoforge_version: neoforge_version]
+	inputs.properties modMetadata
+	filesMatching('META-INF/neoforge.mods.toml') { expand modMetadata }
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+}
+
+tasks.named('jar', Jar) {
+	from('LICENSE')
+}

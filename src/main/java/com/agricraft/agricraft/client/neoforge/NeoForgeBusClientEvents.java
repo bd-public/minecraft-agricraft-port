@@ -1,0 +1,46 @@
+package com.agricraft.agricraft.client.neoforge;
+
+import com.agricraft.agricraft.api.AgriApi;
+import com.agricraft.agricraft.common.item.SeedBagItem;
+import com.agricraft.agricraft.common.registry.AgriDataComponents;
+import com.agricraft.agricraft.common.registry.AgriItems;
+import com.mojang.datafixers.util.Either;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+
+/**
+ * NeoForge client event handler in the forge event bus
+ */
+@EventBusSubscriber(modid = AgriApi.MOD_ID, value = net.neoforged.api.distmarker.Dist.CLIENT)
+public class NeoForgeBusClientEvents {
+
+	@SubscribeEvent
+	public static void onTooltipRender(RenderTooltipEvent.GatherComponents event) {
+		if (event.getItemStack().has(AgriDataComponents.MAGNIFYING)) {
+			event.getTooltipElements().add(1, Either.left(Component.translatable("agricraft.tooltip.magnifying").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC)));
+		}
+	}
+
+
+	@SubscribeEvent
+	public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (player == null || !player.isShiftKeyDown() || !player.getItemInHand(InteractionHand.MAIN_HAND).is(AgriItems.SEED_BAG.get())) {
+			return;
+		}
+		event.setCanceled(true);
+		SeedBagItem.changeSorter(player.getItemInHand(InteractionHand.MAIN_HAND), (int) event.getScrollDeltaY());
+		int s = player.getItemInHand(InteractionHand.MAIN_HAND).get(AgriDataComponents.SEED_BAG_DATA).sorter();
+		String id = SeedBagItem.SORTERS.get(s).getId().toString().replace(":", ".");
+		player.sendOverlayMessage(Component.translatable("agricraft.tooltip.bag.sorter")
+				.append(Component.translatable("agricraft.tooltip.bag.sorter." + id)));
+	}
+
+}

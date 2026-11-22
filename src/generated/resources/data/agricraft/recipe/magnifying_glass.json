@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "g": "#c:glass_panes/colorless",
+    "s": "#c:rods/wooden"
+  },
+  "pattern": [
+    "sgs",
+    " s ",
+    " s "
+  ],
+  "result": {
+    "count": 1,
+    "id": "agricraft:magnifying_glass"
+  }
+}

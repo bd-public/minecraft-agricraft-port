@@ -1,0 +1,15 @@
+{
+  "pack": {
+    "description": {
+      "translate": "agricraft.resourcepacks.pamhc2crops"
+    },
+    "min_format": [
+      84,
+      0
+    ],
+    "max_format": [
+      84,
+      0
+    ]
+  }
+}

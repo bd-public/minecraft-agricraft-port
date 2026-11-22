@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "agricraft:seed/unknown"
+  },
+  "gui_light": "front"
+}

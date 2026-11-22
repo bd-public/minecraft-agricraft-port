@@ -1,0 +1,15 @@
+{
+  "pack": {
+    "description": {
+      "translate": "agricraft.datapacks.biomesoplenty"
+    },
+    "min_format": [
+      101,
+      1
+    ],
+    "max_format": [
+      101,
+      1
+    ]
+  }
+}
