@@ -43,7 +43,9 @@ public class VanillaSeedConversion {
 				// if the analyzer is empty, convert the item to an agricraft seed and let it handle the rest
 				Optional<AgriGenome> genome = AgriApi.get().getGenomeAdapter(heldItem).flatMap(adapter -> adapter.valueOf(heldItem));
 				if (genome.isPresent() && seedAnalyzer.insertSeed(AgriSeedItem.toStack(genome.get()), null)) {
-					heldItem.shrink(1);
+					if (!player.isCreative()) {
+						heldItem.shrink(1);
+					}
 					return true;
 				}
 			}

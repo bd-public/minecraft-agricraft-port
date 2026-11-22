@@ -9,11 +9,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +26,7 @@ public record AgriSoil(List<String> mods, List<AgriSoilVariant> variants,
                        AgriSoilCondition.Acidity acidity, AgriSoilCondition.Nutrients nutrients,
                        Double growthModifier) implements MagnifyingInspectable {
 
-	public static final ResourceKey<Registry<AgriSoil>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "soil"));
+	public static final ResourceKey<Registry<AgriSoil>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "soil"));
 
 	public static final Codec<AgriSoil> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.STRING.listOf().fieldOf("mods").forGetter(soil -> soil.mods),
@@ -49,7 +48,7 @@ public record AgriSoil(List<String> mods, List<AgriSoilVariant> variants,
 				if (variant.states().isEmpty()) {
 					return true;
 				}
-				Set<String> list = blockState.getValues().entrySet().stream().map(StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.toSet());
+				Set<String> list = blockState.getValues().map(Object::toString).collect(Collectors.toSet());
 				if (list.containsAll(variant.states())) {
 					return true;
 				}
@@ -70,7 +69,7 @@ public record AgriSoil(List<String> mods, List<AgriSoilVariant> variants,
 		tooltip.add(Component.translatable("agricraft.tooltip.magnifying.soil"));
 		tooltip.add(Component.literal("  ")
 				.append(Component.translatable("agricraft.tooltip.magnifying.soil.soil"))
-				.append(LangUtils.soilName(this.getId().map(ResourceLocation::toString).orElse(""))));
+				.append(LangUtils.soilName(this.getId().map(Identifier::toString).orElse(""))));
 		tooltip.add(Component.literal("  ")
 				.append(Component.translatable("agricraft.tooltip.magnifying.soil.humidity"))
 				.append(LangUtils.soilPropertyName("humidity", this.humidity)));
@@ -82,7 +81,7 @@ public record AgriSoil(List<String> mods, List<AgriSoilVariant> variants,
 				.append(LangUtils.soilPropertyName("nutrients", this.nutrients)));
 	}
 
-	public Optional<ResourceLocation> getId() {
+	public Optional<Identifier> getId() {
 		return AgriApi.get().getSoilRegistry().map(reg -> reg.getKey(this));
 	}
 

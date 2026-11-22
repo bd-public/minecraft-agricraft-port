@@ -9,8 +9,8 @@ import static com.agricraft.agricraft.common.registry.AgriRegistries.BLOCKS;
 
 public interface AgriBlocks {
 
-	DeferredBlock<CropBlock> CROP = BLOCKS.register("crop", CropBlock::new);
-	DeferredBlock<SeedAnalyzerBlock> SEED_ANALYZER = BLOCKS.register("seed_analyzer", SeedAnalyzerBlock::new);
+	DeferredBlock<CropBlock> CROP = BLOCKS.registerBlock("crop", CropBlock::new);
+	DeferredBlock<SeedAnalyzerBlock> SEED_ANALYZER = BLOCKS.registerBlock("seed_analyzer", SeedAnalyzerBlock::new);
 
 	@ApiStatus.Internal
 	static void register() {}

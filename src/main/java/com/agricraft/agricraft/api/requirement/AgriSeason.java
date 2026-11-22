@@ -6,6 +6,7 @@ import com.mojang.serialization.DataResult;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Locale;
 
 public enum AgriSeason {
 	// Regular seasons
@@ -21,7 +22,7 @@ public enum AgriSeason {
 	public static final Codec<AgriSeason> CODEC = Codec.STRING.comapFlatMap(s -> AgriSeason.fromString(s)
 					.map(DataResult::success)
 					.orElseGet(() -> DataResult.error(() -> s + " is no a valid season")),
-			type -> type.name().toLowerCase());
+			type -> type.name().toLowerCase(Locale.ROOT));
 
 	private final List<String> keys;
 

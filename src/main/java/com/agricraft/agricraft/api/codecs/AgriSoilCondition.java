@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntUnaryOperator;
+import java.util.Locale;
 
 public record AgriSoilCondition<T extends AgriSoilValue>(T value, Type type, double toleranceFactor) {
 
@@ -28,7 +29,7 @@ public record AgriSoilCondition<T extends AgriSoilValue>(T value, Type type, dou
 		public static final Codec<Type> CODEC = Codec.STRING.comapFlatMap(s -> Type.fromString(s)
 						.map(DataResult::success)
 						.orElseGet(() -> DataResult.error(() -> s + " is no a valid soil value type")),
-				type -> type.name().toLowerCase());
+				type -> type.name().toLowerCase(Locale.ROOT));
 
 		private final IntUnaryOperator lower;
 		private final IntUnaryOperator upper;
@@ -68,7 +69,7 @@ public record AgriSoilCondition<T extends AgriSoilValue>(T value, Type type, dou
 		public static final Codec<Humidity> CODEC = Codec.STRING.comapFlatMap(s -> Humidity.fromString(s)
 						.map(DataResult::success)
 						.orElseGet(() -> DataResult.error(() -> s + " is no a valid humidity value")),
-				type -> type.name().toLowerCase());
+				type -> type.name().toLowerCase(Locale.ROOT));
 
 		private final List<String> synonyms;
 
@@ -107,7 +108,7 @@ public record AgriSoilCondition<T extends AgriSoilValue>(T value, Type type, dou
 		public static final Codec<Acidity> CODEC = Codec.STRING.comapFlatMap(s -> Acidity.fromString(s)
 						.map(DataResult::success)
 						.orElseGet(() -> DataResult.error(() -> s + " is no a valid acidity value")),
-				type -> type.name().toLowerCase());
+				type -> type.name().toLowerCase(Locale.ROOT));
 
 		private final List<String> synonyms;
 
@@ -145,7 +146,7 @@ public record AgriSoilCondition<T extends AgriSoilValue>(T value, Type type, dou
 		public static final Codec<Nutrients> CODEC = Codec.STRING.comapFlatMap(s -> Nutrients.fromString(s)
 						.map(DataResult::success)
 						.orElseGet(() -> DataResult.error(() -> s + " is no a valid nutrients value")),
-				type -> type.name().toLowerCase());
+				type -> type.name().toLowerCase(Locale.ROOT));
 
 		private final List<String> synonyms;
 

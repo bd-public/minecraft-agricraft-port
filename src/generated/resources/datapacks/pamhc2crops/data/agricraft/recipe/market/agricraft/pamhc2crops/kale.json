@@ -1,0 +1,49 @@
+{
+  "type": "farmingforblockheads:market",
+  "category": "agricraft:seeds",
+  "preset": "agricraft:any",
+  "result": {
+    "components": {
+      "agricraft:genome": {
+        "chromosomes": {
+          "agricraft:fertility": [
+            "1",
+            "1"
+          ],
+          "agricraft:gain": [
+            "1",
+            "1"
+          ],
+          "agricraft:growth": [
+            "1",
+            "1"
+          ],
+          "agricraft:mutativity": [
+            "1",
+            "1"
+          ],
+          "agricraft:resistance": [
+            "1",
+            "1"
+          ],
+          "agricraft:species": [
+            "pamhc2crops:kale",
+            "pamhc2crops:kale"
+          ],
+          "agricraft:strength": [
+            "1",
+            "1"
+          ]
+        }
+      }
+    },
+    "count": 1,
+    "item": "agricraft:seed"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmingforblockheads"
+    }
+  ]
+}

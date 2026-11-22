@@ -2,11 +2,6 @@
 	"sources": [
 		{
 			"type": "directory",
-			"source": "seed",
-			"prefix": "seed/"
-		},
-		{
-			"type": "directory",
 			"source": "plant",
 			"prefix": "plant/"
 		},

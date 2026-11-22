@@ -1,6 +1,7 @@
 package com.agricraft.agricraft.common.block;
 
 import net.minecraft.util.StringRepresentable;
+import java.util.Locale;
 
 public enum CropState implements StringRepresentable {
 	PLANT,
@@ -10,7 +11,7 @@ public enum CropState implements StringRepresentable {
 
 	@Override
 	public String getSerializedName() {
-		return this.name().toLowerCase();
+		return this.name().toLowerCase(Locale.ROOT);
 	}
 
 	public boolean hasSticks() {

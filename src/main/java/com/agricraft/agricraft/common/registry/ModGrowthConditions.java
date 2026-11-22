@@ -16,7 +16,6 @@ import com.agricraft.agricraft.api.requirement.SoilGrowthCondition;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.ApiStatus;
@@ -60,7 +59,7 @@ public interface ModGrowthConditions {
 					if (blockCondition.states().isEmpty()) {
 						return AgriGrowthResponse.FERTILE;
 					}
-					Set<String> list = blockstate.getValues().entrySet().stream().map(StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.toSet());
+					Set<String> list = blockstate.getValues().map(Object::toString).collect(Collectors.toSet());
 					if (list.containsAll(blockCondition.states())) {
 						return AgriGrowthResponse.FERTILE;
 					}
@@ -91,11 +90,11 @@ public interface ModGrowthConditions {
 				return AgriGrowthResponse.FERTILE;
 			}
 			if (listCondition.blacklist()) {
-				if (listCondition.values().stream().anyMatch(dimension.location()::equals)) {
+				if (listCondition.values().stream().anyMatch(dimension.identifier()::equals)) {
 					return AgriGrowthResponse.INFERTILE;
 				}
 			} else {
-				if (listCondition.values().stream().noneMatch(dimension.location()::equals)) {
+				if (listCondition.values().stream().noneMatch(dimension.identifier()::equals)) {
 					return AgriGrowthResponse.INFERTILE;
 				}
 			}
@@ -124,7 +123,7 @@ public interface ModGrowthConditions {
 					if (fluidCondition.states().isEmpty()) {
 						return AgriGrowthResponse.FERTILE;
 					}
-					Set<String> list = fluid.getValues().entrySet().stream().map(StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.toSet());
+					Set<String> list = fluid.getValues().map(Object::toString).collect(Collectors.toSet());
 					return list.containsAll(fluidCondition.states()) ? AgriGrowthResponse.FERTILE : AgriGrowthResponse.LETHAL;
 				}
 				return fluid.is(Fluids.LAVA) ? AgriGrowthResponse.KILL_IT_WITH_FIRE : AgriGrowthResponse.LETHAL;

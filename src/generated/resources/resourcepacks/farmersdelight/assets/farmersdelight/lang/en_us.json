@@ -1,0 +1,16 @@
+{
+  "description.agricraft.farmersdelight.cabbage": "Full of vitamin K.",
+  "description.agricraft.farmersdelight.onion": "Goes well with pickles.",
+  "description.agricraft.farmersdelight.rice": "Flood the fields.",
+  "description.agricraft.farmersdelight.tomato": "A red and plump fruit.",
+  "plant.agricraft.farmersdelight.cabbage": "item.farmersdelight.cabbage",
+  "plant.agricraft.farmersdelight.onion": "item.farmersdelight.onion",
+  "plant.agricraft.farmersdelight.rice": "item.farmersdelight.rice",
+  "plant.agricraft.farmersdelight.tomato": "item.farmersdelight.tomato",
+  "seed.agricraft.farmersdelight.cabbage": "item.farmersdelight.cabbage_seeds",
+  "seed.agricraft.farmersdelight.onion": "item.farmersdelight.onion",
+  "seed.agricraft.farmersdelight.rice": "item.farmersdelight.rice",
+  "seed.agricraft.farmersdelight.tomato": "item.farmersdelight.tomato_seeds",
+  "soil.agricraft.farmersdelight.rich_soil": "block.farmersdelight.rich_soil",
+  "soil.agricraft.farmersdelight.rich_soil_farmland": "block.farmersdelight.rich_soil_farmland"
+}

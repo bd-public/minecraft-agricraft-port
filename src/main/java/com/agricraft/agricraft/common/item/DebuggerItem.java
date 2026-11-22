@@ -20,16 +20,16 @@ public class DebuggerItem extends Item {
 		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		Player player = context.getPlayer();
-		System.out.println("side: " + (level.isClientSide?"client":"server"));
+		System.out.println("side: " + (level.isClientSide()?"client":"server"));
 		if (level.getBlockEntity(pos) instanceof SeedAnalyzerBlockEntity analyzer) {
 			System.out.println("  tag: " + analyzer.saveWithoutMetadata(level.registryAccess()));
 			System.out.println("  hasSeed: " + analyzer.hasSeed());
 			if (analyzer.hasSeed()) {
-				System.out.println("    seed: " + analyzer.getSeed() + " " + analyzer.getSeed().save(player.registryAccess()));
+				System.out.println("    seed: " + analyzer.getSeed());
 			}
 			System.out.println("  hasJournal: " + analyzer.hasJournal());
 			if (analyzer.hasJournal()) {
-				System.out.println("    journal: " + analyzer.getJournal() + " " + analyzer.getJournal().save(player.registryAccess()));
+				System.out.println("    journal: " + analyzer.getJournal());
 			}
 		}
 		if (level.getBlockEntity(pos) instanceof CropBlockEntity crop) {

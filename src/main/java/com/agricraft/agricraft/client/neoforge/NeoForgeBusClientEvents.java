@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 /**
  * NeoForge client event handler in the forge event bus
  */
-@EventBusSubscriber(modid = AgriApi.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = AgriApi.MOD_ID, value = net.neoforged.api.distmarker.Dist.CLIENT)
 public class NeoForgeBusClientEvents {
 
 	@SubscribeEvent
@@ -39,8 +39,8 @@ public class NeoForgeBusClientEvents {
 		SeedBagItem.changeSorter(player.getItemInHand(InteractionHand.MAIN_HAND), (int) event.getScrollDeltaY());
 		int s = player.getItemInHand(InteractionHand.MAIN_HAND).get(AgriDataComponents.SEED_BAG_DATA).sorter();
 		String id = SeedBagItem.SORTERS.get(s).getId().toString().replace(":", ".");
-		player.displayClientMessage(Component.translatable("agricraft.tooltip.bag.sorter")
-				.append(Component.translatable("agricraft.tooltip.bag.sorter." + id)), true);
+		player.sendOverlayMessage(Component.translatable("agricraft.tooltip.bag.sorter")
+				.append(Component.translatable("agricraft.tooltip.bag.sorter." + id)));
 	}
 
 }

@@ -22,14 +22,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+
+import java.util.function.Consumer;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
@@ -47,22 +49,21 @@ public class JournalItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-		ItemStack stack = player.getItemInHand(usedHand);
+	public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
 		if (player.isDiscrete()) {
-			return InteractionResultHolder.pass(stack);
+			return InteractionResult.PASS;
 		}
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			ClientUtil.openJournalScreen(player, usedHand);
-			return InteractionResultHolder.consume(stack);
+			return InteractionResult.CONSUME;
 		}
-		return InteractionResultHolder.pass(stack);
+		return InteractionResult.PASS;
 	}
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Level level = context.getLevel();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return InteractionResult.CONSUME;
 		}
 		ItemStack heldItem = context.getItemInHand();
@@ -76,7 +77,7 @@ public class JournalItem extends Item {
 		return super.useOn(context);
 	}
 
-	public static void researchPlant(ItemStack journal, ResourceLocation plantId) {
+	public static void researchPlant(ItemStack journal, Identifier plantId) {
 		Data data = journal.get(AgriDataComponents.JOURNAL_DATA.get());
 		if (data != null && !data.plants.contains(plantId)) {
 			journal.set(AgriDataComponents.JOURNAL_DATA, data.addPlant(plantId));
@@ -84,10 +85,10 @@ public class JournalItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltipComponents, TooltipFlag isAdvanced) {
 		Data data = stack.get(AgriDataComponents.JOURNAL_DATA);
 		int size = data == null ? 0 : data.getDiscoveredSeeds().size();
-		tooltipComponents.add(Component.translatable("agricraft.tooltip.journal", size).withStyle(ChatFormatting.GRAY));
+		tooltipComponents.accept(Component.translatable("agricraft.tooltip.journal", size).withStyle(ChatFormatting.GRAY));
 	}
 
 	public static JournalData getJournalData(ItemStack journal) {
@@ -97,14 +98,14 @@ public class JournalItem extends Item {
 	public static class Data implements JournalData {
 
 		public static final Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				ResourceLocation.CODEC.listOf().fieldOf("plants").forGetter(data -> data.plants)
+				Identifier.CODEC.listOf().fieldOf("plants").forGetter(data -> data.plants)
 		).apply(instance, Data::new));
 		public static StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
-				ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), data -> data.plants,
+				Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()), data -> data.plants,
 				Data::new
 		);
 
-		private final ImmutableList<ResourceLocation> plants;
+		private final ImmutableList<Identifier> plants;
 		private final List<JournalPage> pages;
 
 		public Data() {
@@ -113,23 +114,23 @@ public class JournalItem extends Item {
 			this.initializePages();
 		}
 
-		public Data(Collection<ResourceLocation> plants) {
-			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-			plants.stream().sorted(Comparator.comparing(ResourceLocation::toString)).forEach(builder::add);
+		public Data(Collection<Identifier> plants) {
+			ImmutableList.Builder<Identifier> builder = ImmutableList.builder();
+			plants.stream().sorted(Comparator.comparing(Identifier::toString)).forEach(builder::add);
 			this.plants = builder.build();
 			this.pages = new ArrayList<>();
 			this.initializePages();
 		}
 
-		private Data(ImmutableList<ResourceLocation> plants) {
+		private Data(ImmutableList<Identifier> plants) {
 			this.plants = plants;
 			this.pages = new ArrayList<>();
 			this.initializePages();
 		}
 
-		public Data addPlant(ResourceLocation plant) {
-			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-			Stream.concat(plants.stream(), Stream.of(plant)).sorted(Comparator.comparing(ResourceLocation::toString)).forEach(builder::add);
+		public Data addPlant(Identifier plant) {
+			ImmutableList.Builder<Identifier> builder = ImmutableList.builder();
+			Stream.concat(plants.stream(), Stream.of(plant)).sorted(Comparator.comparing(Identifier::toString)).forEach(builder::add);
 			return new Data(builder.build());
 		}
 
@@ -139,13 +140,13 @@ public class JournalItem extends Item {
 			pages.add(new IntroductionPage());
 			pages.add(new GeneticsPage());
 			pages.add(new GrowthReqsPage());
-			for (ResourceLocation plant : this.plants) {
+			for (Identifier plant : this.plants) {
 				if (AgriApi.get().getPlant(plant).isEmpty()) {
 					continue;
 				}
 				PlantPage plantPage = new PlantPage(plant, plants);
 				pages.add(plantPage);
-				List<List<ResourceLocation>> mutations = plantPage.getMutationsOffPage();
+				List<List<Identifier>> mutations = plantPage.getMutationsOffPage();
 				int size = mutations.size();
 				if (size > 0) {
 					int remaining = size;
@@ -178,7 +179,7 @@ public class JournalItem extends Item {
 		}
 
 		@Override
-		public List<ResourceLocation> getDiscoveredSeeds() {
+		public List<Identifier> getDiscoveredSeeds() {
 			return this.plants;
 		}
 

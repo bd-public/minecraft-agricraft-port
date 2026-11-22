@@ -10,7 +10,7 @@ import com.agricraft.agricraft.api.registries.AgriCraftStats;
 import com.agricraft.agricraft.api.requirement.AgriGrowthResponse;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -44,7 +44,7 @@ public interface AgriCrop extends AgriGenomeProvider, IAgriFertilizable {
 	/**
 	 * @return the id of the plant or an empty string if there is no plant
 	 */
-	ResourceLocation getPlantId();
+	Identifier getPlantId();
 
 	/**
 	 * @return the plant associated to this crop or {@link AgriPlant#NO_PLANT} if there is no plant
@@ -59,7 +59,7 @@ public interface AgriCrop extends AgriGenomeProvider, IAgriFertilizable {
 	/**
 	 * @return the id of the weed or an empty string if there is no weed
 	 */
-	ResourceLocation getWeedId();
+	Identifier getWeedId();
 
 	/**
 	 * @return the weed associated to this crop or null if there is no weed

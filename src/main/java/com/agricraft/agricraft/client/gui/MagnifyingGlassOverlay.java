@@ -2,10 +2,9 @@ package com.agricraft.agricraft.client.gui;
 
 import com.agricraft.agricraft.api.AgriClientApi;
 import com.agricraft.agricraft.api.tools.magnifying.MagnifyingInspectable;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.network.chat.Component;
@@ -29,7 +28,7 @@ public class MagnifyingGlassOverlay {
 
 	private static int hoverTicks;
 
-	public static void renderOverlay(GuiGraphics graphics, DeltaTracker deltaTracker) {
+	public static void renderOverlay(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
 		// greatly inspired from create goggles
 		Minecraft mc = Minecraft.getInstance();
 		if ((mc.screen != null && !(mc.screen instanceof ChatScreen)) || mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR || mc.player == null || mc.level == null) {
@@ -70,9 +69,7 @@ public class MagnifyingGlassOverlay {
 				tooltipHeight += 2; // gap between title lines and next lines
 				tooltipHeight += (tooltip.size() - 1) * 10;
 			}
-			RenderSystem.setShaderColor(1, 1, 1, Mth.clamp(hoverTicks / 24f, 0, 0.8f));
-			graphics.renderTooltip(mc.font, tooltip, Optional.empty(), posX - TooltipRenderUtil.MOUSE_OFFSET, posY - tooltipHeight / 2 + 12);
-			RenderSystem.setShaderColor(1, 1, 1, 1);
+			graphics.setComponentTooltipForNextFrame(mc.font, tooltip, posX - TooltipRenderUtil.MOUSE_OFFSET, posY - tooltipHeight / 2 + 12);
 		}
 
 	}

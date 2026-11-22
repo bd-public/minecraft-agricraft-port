@@ -22,28 +22,28 @@ import static com.agricraft.agricraft.common.registry.AgriRegistries.ITEMS;
 public interface AgriItems {
 
 
-	DeferredItem<DebuggerItem> DEBUGGER = ITEMS.register("debugger", () -> new DebuggerItem(new Item.Properties()));
+	DeferredItem<DebuggerItem> DEBUGGER = ITEMS.registerItem("debugger", properties -> new DebuggerItem(properties));
 
-	DeferredItem<JournalItem> JOURNAL = ITEMS.register("journal", () -> new JournalItem(new Item.Properties().component(AgriDataComponents.JOURNAL_DATA.get(), new JournalItem.Data())));
-	DeferredItem<BlockItem> SEED_ANALYZER = ITEMS.register("seed_analyzer", () -> new BlockItem(AgriBlocks.SEED_ANALYZER.get(), new Item.Properties()));
-	DeferredItem<ClipperItem> CLIPPER = ITEMS.register("clipper", () -> new ClipperItem(new Item.Properties().stacksTo(1)));
-	DeferredItem<MagnifyingGlassItem> MAGNIFYING_GLASS = ITEMS.register("magnifying_glass", () -> new MagnifyingGlassItem(new Item.Properties().component(AgriDataComponents.MAGNIFYING.get(), Unit.INSTANCE).stacksTo(1)));
-	DeferredItem<RakeItem> WOODEN_RAKE = ITEMS.register("wooden_rake", () -> new RakeItem(new Item.Properties(), RakeItem.WOOD_LOGIC));
-	DeferredItem<RakeItem> IRON_RAKE = ITEMS.register("iron_rake", () -> new RakeItem(new Item.Properties(), RakeItem.IRON_LOGIC));
-	DeferredItem<TrowelItem> TROWEL = ITEMS.register("trowel", () -> new TrowelItem(new Item.Properties().stacksTo(1)));
-	DeferredItem<CropSticksItem> WOODEN_CROP_STICKS = ITEMS.register("wooden_crop_sticks", () -> new CropSticksItem(AgriBlocks.CROP.get(), CropStickVariant.WOODEN));
-	DeferredItem<CropSticksItem> IRON_CROP_STICKS = ITEMS.register("iron_crop_sticks", () -> new CropSticksItem(AgriBlocks.CROP.get(), CropStickVariant.IRON));
-	DeferredItem<CropSticksItem> OBSIDIAN_CROP_STICKS = ITEMS.register("obsidian_crop_sticks", () -> new CropSticksItem(AgriBlocks.CROP.get(), CropStickVariant.OBSIDIAN));
-	DeferredItem<SeedBagItem> SEED_BAG = ITEMS.register("seed_bag", () -> new SeedBagItem(new Item.Properties().component(AgriDataComponents.SEED_BAG_DATA.get(), new SeedBagItem.Data()).stacksTo(1)));
-	DeferredItem<AgriSeedItem> SEED = ITEMS.register("seed", () -> new AgriSeedItem(new Item.Properties()));
+	DeferredItem<JournalItem> JOURNAL = ITEMS.registerItem("journal", properties -> new JournalItem(properties.component(AgriDataComponents.JOURNAL_DATA.get(), new JournalItem.Data())));
+	DeferredItem<BlockItem> SEED_ANALYZER = ITEMS.registerSimpleBlockItem(AgriBlocks.SEED_ANALYZER);
+	DeferredItem<ClipperItem> CLIPPER = ITEMS.registerItem("clipper", properties -> new ClipperItem(properties.stacksTo(1)));
+	DeferredItem<MagnifyingGlassItem> MAGNIFYING_GLASS = ITEMS.registerItem("magnifying_glass", properties -> new MagnifyingGlassItem(properties.component(AgriDataComponents.MAGNIFYING.get(), Unit.INSTANCE).stacksTo(1)));
+	DeferredItem<RakeItem> WOODEN_RAKE = ITEMS.registerItem("wooden_rake", properties -> new RakeItem(properties, RakeItem.WOOD_LOGIC));
+	DeferredItem<RakeItem> IRON_RAKE = ITEMS.registerItem("iron_rake", properties -> new RakeItem(properties, RakeItem.IRON_LOGIC));
+	DeferredItem<TrowelItem> TROWEL = ITEMS.registerItem("trowel", properties -> new TrowelItem(properties.stacksTo(1)));
+	DeferredItem<CropSticksItem> WOODEN_CROP_STICKS = ITEMS.registerItem("wooden_crop_sticks", properties -> new CropSticksItem(AgriBlocks.CROP.get(), properties, CropStickVariant.WOODEN));
+	DeferredItem<CropSticksItem> IRON_CROP_STICKS = ITEMS.registerItem("iron_crop_sticks", properties -> new CropSticksItem(AgriBlocks.CROP.get(), properties, CropStickVariant.IRON));
+	DeferredItem<CropSticksItem> OBSIDIAN_CROP_STICKS = ITEMS.registerItem("obsidian_crop_sticks", properties -> new CropSticksItem(AgriBlocks.CROP.get(), properties, CropStickVariant.OBSIDIAN));
+	DeferredItem<SeedBagItem> SEED_BAG = ITEMS.registerItem("seed_bag", properties -> new SeedBagItem(properties.component(AgriDataComponents.SEED_BAG_DATA.get(), new SeedBagItem.Data()).stacksTo(1)));
+	DeferredItem<AgriSeedItem> SEED = ITEMS.registerItem("seed", properties -> new AgriSeedItem(properties));
 
-	DeferredItem<Item> COAL_PEBBLE = ITEMS.register("coal_pebble", () -> new Item(new Item.Properties()));
-	DeferredItem<Item> COPPER_NUGGET = ITEMS.register("copper_nugget", () -> new Item(new Item.Properties()));
-	DeferredItem<Item> DIAMOND_SHARD = ITEMS.register("diamond_shard", () -> new Item(new Item.Properties()));
-	DeferredItem<Item> EMERALD_SHARD = ITEMS.register("emerald_shard", () -> new Item(new Item.Properties()));
-	DeferredItem<Item> QUARTZ_SHARD = ITEMS.register("quartz_shard", () -> new Item(new Item.Properties()));
-	DeferredItem<Item> NETHERITE_SLIVER = ITEMS.register("netherite_sliver", () -> new Item(new Item.Properties().fireResistant()));
-	DeferredItem<Item> AMATHYLLIS_PETAL = ITEMS.register("amathyllis_petal", () -> new Item(new Item.Properties()));
+	DeferredItem<Item> COAL_PEBBLE = ITEMS.registerItem("coal_pebble", properties -> new Item(properties));
+	DeferredItem<Item> COPPER_NUGGET = ITEMS.registerItem("copper_nugget", properties -> new Item(properties));
+	DeferredItem<Item> DIAMOND_SHARD = ITEMS.registerItem("diamond_shard", properties -> new Item(properties));
+	DeferredItem<Item> EMERALD_SHARD = ITEMS.registerItem("emerald_shard", properties -> new Item(properties));
+	DeferredItem<Item> QUARTZ_SHARD = ITEMS.registerItem("quartz_shard", properties -> new Item(properties));
+	DeferredItem<Item> NETHERITE_SLIVER = ITEMS.registerItem("netherite_sliver", properties -> new Item(properties.fireResistant()));
+	DeferredItem<Item> AMATHYLLIS_PETAL = ITEMS.registerItem("amathyllis_petal", properties -> new Item(properties));
 
 	static void addItemsToTabs(CreativeModeTab.ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output output) {
 		if (itemDisplayParameters.hasPermissions()) {

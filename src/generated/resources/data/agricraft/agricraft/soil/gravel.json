@@ -1,0 +1,12 @@
+{
+  "acidity": "slightly_alkaline",
+  "growth_modifier": 0.5,
+  "humidity": "dry",
+  "mods": [],
+  "nutrients": "low",
+  "variants": [
+    {
+      "block": "#c:gravels"
+    }
+  ]
+}

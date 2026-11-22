@@ -17,9 +17,9 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 // TODO: @Ketheroth add javadoc to all methods
 public class AgriPlant {
 
-	public static final ResourceKey<Registry<AgriPlant>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "plant"));
+	public static final ResourceKey<Registry<AgriPlant>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "plant"));
 
 	public static final Codec<AgriPlant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.STRING.listOf().fieldOf("mods").forGetter(plant -> plant.mods),
@@ -61,7 +61,7 @@ public class AgriPlant {
 	).apply(instance, AgriPlant::new));
 
 	public static final AgriPlant NO_PLANT = new AgriPlant.Builder().harvest(0).chances(0, 0, 0).build();
-	public static final ResourceLocation UNKNOWN = ResourceLocation.fromNamespaceAndPath("agricraft", "unknown");
+	public static final Identifier UNKNOWN = Identifier.fromNamespaceAndPath("agricraft", "unknown");
 
 	private final List<String> mods;
 	private final List<AgriSeed> seeds;
@@ -222,7 +222,7 @@ public class AgriPlant {
 		this.particleEffects.stream()
 				.filter(effect -> effect.allowParticles(stage.index()))
 				.forEach(effect -> {
-					ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.parse(effect.particle()));
+					ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.parse(effect.particle()));
 					if (!(particle instanceof ParticleOptions)) {
 						return;
 					}
@@ -305,7 +305,7 @@ public class AgriPlant {
 		this.getModifiers().forEach(modifier -> modifier.onEntityCollision(crop, entity));
 	}
 
-	public Optional<ItemInteractionResult> onRightClickPre(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
+	public Optional<InteractionResult> onRightClickPre(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
 		return this.getModifiers()
 				.map(modifier -> modifier.onRightClickPre(crop, stack, entity))
 				.filter(Optional::isPresent)
@@ -313,7 +313,7 @@ public class AgriPlant {
 				.findFirst();
 	}
 
-	public Optional<ItemInteractionResult> onRightClickPost(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
+	public Optional<InteractionResult> onRightClickPost(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
 		return this.getModifiers()
 				.map(modifier -> modifier.onRightClickPost(crop, stack, entity))
 				.filter(Optional::isPresent)
@@ -321,7 +321,7 @@ public class AgriPlant {
 				.findFirst();
 	}
 
-	public Optional<ResourceLocation> getId() {
+	public Optional<Identifier> getId() {
 		return AgriApi.get().getPlantRegistry().flatMap(registry -> Optional.ofNullable(registry.getKey(this)));
 	}
 

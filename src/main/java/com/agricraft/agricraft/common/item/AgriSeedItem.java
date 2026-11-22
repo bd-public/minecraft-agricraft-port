@@ -18,6 +18,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+
+import java.util.function.Consumer;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -117,7 +120,7 @@ public class AgriSeedItem extends BlockItem {
 			return seedAnalyzer.insertSeed(heldItem, context.getPlayer()) ? InteractionResult.SUCCESS : InteractionResult.PASS;
 		}
 		// if a soil was clicked, check the block above and handle accordingly
-		return AgriApi.get().getSoil(level, context.getClickedPos()).map(soil -> AgriApi.get().getCrop(level, context.getClickedPos().above()).map(crop -> {
+		return AgriApi.get().getSoil(level, context.getClickedPos()).map(soil -> AgriApi.get().getCrop(level, context.getClickedPos().above()).<InteractionResult>map(crop -> {
 			// there is a crop with a plant or is a cross crop stick, do nothing
 			if (crop.hasPlant() || crop.isCrossCropSticks()) {
 				return InteractionResult.PASS;
@@ -139,7 +142,7 @@ public class AgriSeedItem extends BlockItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
 		AgriGenome genome = stack.get(AgriDataComponents.GENOME);
 		if (genome != null) {
 			genome.appendHoverText(tooltipComponents, tooltipFlag);
@@ -148,7 +151,7 @@ public class AgriSeedItem extends BlockItem {
 
 //	@Override
 //	public ItemStack getDefaultInstance() {
-//		return AgriApi.getPlant(new ResourceLocation("minecraft:wheat")).map(AgriSeedItem::toStack).orElse(super.getDefaultInstance());
+//		return AgriApi.getPlant(new Identifier("minecraft:wheat")).map(AgriSeedItem::toStack).orElse(super.getDefaultInstance());
 //	}
 
 }

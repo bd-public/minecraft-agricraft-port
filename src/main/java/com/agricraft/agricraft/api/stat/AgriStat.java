@@ -7,7 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -15,7 +15,7 @@ import java.util.function.IntSupplier;
 
 public class AgriStat {
 
-	public static ResourceKey<Registry<AgriStat>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("agricraft", "stat"));
+	public static ResourceKey<Registry<AgriStat>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("agricraft", "stat"));
 
 	private final IntSupplier min;
 	private final IntSupplier max;
@@ -53,12 +53,12 @@ public class AgriStat {
 		}
 	}
 
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return AgriApi.get().getStatRegistry().getKey(this);
 	}
 
 	public GeneStat getGene() {
-		return (GeneStat) AgriApi.get().getGeneRegistry().get(this.getId());
+		return (GeneStat) AgriApi.get().getGeneRegistry().getValue(this.getId());
 	}
 
 }

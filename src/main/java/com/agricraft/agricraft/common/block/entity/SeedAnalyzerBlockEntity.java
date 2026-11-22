@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class SeedAnalyzerBlockEntity extends BlockEntity implements MenuProvider {
@@ -38,26 +40,20 @@ public class SeedAnalyzerBlockEntity extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-		super.loadAdditional(tag, registries);
-		if (tag.contains("journal")) {
-			ItemStack journal = ItemStack.parseOptional(registries, tag.getCompound("journal"));
-			this.inventory.setItem(JOURNAL_SLOT, journal);
-		}
-		if (tag.contains("seed")) {
-			ItemStack seed = ItemStack.parseOptional(registries, tag.getCompound("seed"));
-			this.inventory.setItem(SEED_SLOT, seed);
-		}
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		this.inventory.setItem(JOURNAL_SLOT, input.read("journal", ItemStack.CODEC).orElse(ItemStack.EMPTY));
+		this.inventory.setItem(SEED_SLOT, input.read("seed", ItemStack.CODEC).orElse(ItemStack.EMPTY));
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-		super.saveAdditional(tag, registries);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
 		if (hasJournal()) {
-			tag.put("journal", getJournal().save(registries));
+			output.store("journal", ItemStack.CODEC, getJournal());
 		}
 		if (hasSeed()) {
-			tag.put("seed", getSeed().save(registries));
+			output.store("seed", ItemStack.CODEC, getSeed());
 		}
 	}
 
@@ -85,7 +81,7 @@ public class SeedAnalyzerBlockEntity extends BlockEntity implements MenuProvider
 			ItemStack stack = seed.consumeAndReturn(1, entity);
 			this.inventory.setItem(SEED_SLOT, stack);
 			if (hasJournal()) {
-				JournalItem.researchPlant(this.getJournal(), ResourceLocation.parse(AgriSeedItem.getSpecies(seed)));
+				JournalItem.researchPlant(this.getJournal(), Identifier.parse(AgriSeedItem.getSpecies(stack)));
 			}
 			this.setChanged();
 			this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);

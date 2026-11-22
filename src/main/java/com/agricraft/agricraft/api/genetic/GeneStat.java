@@ -4,7 +4,7 @@ import com.agricraft.agricraft.api.AgriApi;
 import com.agricraft.agricraft.api.stat.AgriStat;
 import net.minecraft.network.chat.Component;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GeneStat implements AgriGene<Integer> {
@@ -40,8 +40,8 @@ public class GeneStat implements AgriGene<Integer> {
 	}
 
 	@Override
-	public void addTooltip(List<Component> tooltipComponents, Integer trait) {
-		this.stat.get().addTooltip(tooltipComponents::add, trait);
+	public void addTooltip(Consumer<Component> tooltipComponents, Integer trait) {
+		this.stat.get().addTooltip(tooltipComponents, trait);
 	}
 
 	@Override

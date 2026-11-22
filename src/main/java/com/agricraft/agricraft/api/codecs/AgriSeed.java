@@ -3,7 +3,7 @@ package com.agricraft.agricraft.api.codecs;
 import com.agricraft.agricraft.api.TagUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -56,22 +56,22 @@ public record AgriSeed(ExtraCodecs.TagOrElementLocation item, boolean overridePl
 		}
 
 		public Builder item(String location) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), false);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), false);
 			return this;
 		}
 
 		public Builder item(String namespace, String path) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), false);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), false);
 			return this;
 		}
 
 		public Builder tag(String location) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), true);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), true);
 			return this;
 		}
 
 		public Builder tag(String namespace, String path) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), true);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), true);
 			return this;
 		}
 

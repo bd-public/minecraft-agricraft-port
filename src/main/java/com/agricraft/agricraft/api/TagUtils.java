@@ -5,7 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
@@ -19,9 +19,9 @@ public class TagUtils {
 
 	public static List<Item> items(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
-			return List.of(BuiltInRegistries.ITEM.get(tag.id()));
+			return List.of(BuiltInRegistries.ITEM.getValue(tag.id()));
 		} else {
-			return BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, tag.id()))
+			return BuiltInRegistries.ITEM.get(TagKey.create(Registries.ITEM, tag.id()))
 					.map(HolderSet.ListBacked::stream)
 					.map(str -> str.map(Holder::value))
 					.map(Stream::toList)
@@ -31,9 +31,9 @@ public class TagUtils {
 
 	public static List<Block> blocks(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
-			return List.of(BuiltInRegistries.BLOCK.get(tag.id()));
+			return List.of(BuiltInRegistries.BLOCK.getValue(tag.id()));
 		} else {
-			return BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, tag.id()))
+			return BuiltInRegistries.BLOCK.get(TagKey.create(Registries.BLOCK, tag.id()))
 					.map(HolderSet.ListBacked::stream)
 					.map(str -> str.map(Holder::value))
 					.map(Stream::toList)
@@ -43,9 +43,9 @@ public class TagUtils {
 
 	public static List<Fluid> fluids(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
-			return List.of(BuiltInRegistries.FLUID.get(tag.id()));
+			return List.of(BuiltInRegistries.FLUID.getValue(tag.id()));
 		} else {
-			return BuiltInRegistries.FLUID.getTag(TagKey.create(Registries.FLUID, tag.id()))
+			return BuiltInRegistries.FLUID.get(TagKey.create(Registries.FLUID, tag.id()))
 					.map(HolderSet.ListBacked::stream)
 					.map(str -> str.map(Holder::value))
 					.map(Stream::toList)
@@ -53,12 +53,12 @@ public class TagUtils {
 		}
 	}
 
-	public static Stream<ResourceLocation> plants(ExtraCodecs.TagOrElementLocation tag) {
+	public static Stream<Identifier> plants(ExtraCodecs.TagOrElementLocation tag) {
 		if (!tag.tag()) {
 			return Stream.of(tag.id());
 		} else {
 			return AgriApi.get().getPlantRegistry().flatMap(registry ->
-							registry.getTag(TagKey.create(AgriPlant.REGISTRY_KEY, tag.id()))
+							registry.get(TagKey.create(AgriPlant.REGISTRY_KEY, tag.id()))
 									.map(named -> named.stream().map(holder -> registry.getKey(holder.value())))
 					)
 					.orElse(Stream.empty());

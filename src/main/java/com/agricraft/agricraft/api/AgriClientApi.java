@@ -3,10 +3,9 @@ package com.agricraft.agricraft.api;
 import com.agricraft.agricraft.api.tools.journal.JournalPage;
 import com.agricraft.agricraft.api.tools.journal.JournalPageDrawer;
 import com.agricraft.agricraft.api.tools.magnifying.MagnifyingInspector;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import com.agricraft.agricraft.client.AgriCraftClient;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
 public interface AgriClientApi {
 
 	String UNKNOWN_SEED = "agricraft:unknown";
-	String UNKNOWN_PLANT = "agricraft:crop/unknown";
+	Identifier UNKNOWN_PLANT = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "crop/unknown");
 
 	static AgriClientApi get() {
 		return InstanceHolder.instance;
@@ -27,7 +26,7 @@ public interface AgriClientApi {
 		InstanceHolder.instance = instance;
 	}
 
-	<T extends JournalPage> void registerJournalPageDrawer(ResourceLocation id, JournalPageDrawer<T> drawer);
+	<T extends JournalPage> void registerJournalPageDrawer(Identifier id, JournalPageDrawer<T> drawer);
 
 	<T extends JournalPage> JournalPageDrawer<T> getJournalPageDrawer(T page);
 
@@ -50,66 +49,32 @@ public interface AgriClientApi {
 	Stream<MagnifyingInspector> getMagnifyingInspectors();
 
 
-	default BakedModel getPlantModel(ResourceLocation plantId, int stage) {
-		return getPlantModel(plantId.toString(), stage);
-	}
 
-	default BakedModel getPlantModel(String plantId, int stage) {
-		if (plantId.isEmpty()) {
-			// somehow there is no plant, display nothing
-			return null;
-		} else {
-			// compute the block model from the plant id and growth stage
-			// will look like <namespace>:crop/<id>_stage<growth_stage> so the file is assets/<namespace>/models/crop/<id>_stage<growth_stage>.json
-			String plant = plantId.replace(":", ":crop/") + "_stage" + stage;
-			BakedModel model = Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(ResourceLocation.parse(plant)));
-			if (model.equals(Minecraft.getInstance().getModelManager().getMissingModel())) {
-				// model not found, default to the unknown crop model that should always be present
-				return Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(ResourceLocation.parse(UNKNOWN_PLANT)));
-			}
-			return model;
-		}
-	}
+    default BlockStateModel getPlantModel(Identifier plantId, int stage) {
+        return getPlantModel(plantId.toString(), stage);
+    }
 
-	default BakedModel getWeedModel(String weedId, int stage) {
-		if (weedId.isEmpty()) {
-			// somehow there is no plant, display nothing
-			return null;
-		} else {
-			// compute the block model from the plant id and growth stage
-			// will look like <namespace>:weed/<id>_stage<growth_stage> so the file is assets/<namespace>/models/weed/<id>_stage<growth_stage>.json
-			String plant = weedId.replace(":", ":weed/") + "_stage" + stage;
-			BakedModel model = Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(ResourceLocation.parse(plant)));
-			if (model.equals(Minecraft.getInstance().getModelManager().getMissingModel())) {
-				// model not found, default to the unknown crop model that should always be present
-				return Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(ResourceLocation.parse(UNKNOWN_PLANT)));
-			}
-			return model;
-		}
-	}
+    default BlockStateModel getPlantModel(String plantId, int stage) {
+        return getStageModel(Identifier.tryParse(plantId), "crop/", stage);
+    }
 
-	default BakedModel getSeedModel(String plantId) {
-		if (plantId.isEmpty()) {
-			plantId = UNKNOWN_SEED;
-		}
-		// compute the model of the seed from the plant id. the seed model path will look like <namespace>:seed/<id> so the file is /assets/<namespace>/models/seed/<id>.json
-		plantId = plantId.replace(":", ":seed/");
+    default BlockStateModel getWeedModel(String weedId, int stage) {
+        return getStageModel(Identifier.tryParse(weedId), "weed/", stage);
+    }
 
-		BakedModel model = Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(ResourceLocation.parse(plantId)));
-		if (model.equals(Minecraft.getInstance().getModelManager().getMissingModel())) {
-			// model not found, defaults to the missing model
-			model = Minecraft.getInstance().getModelManager().getMissingModel();
-		}
-		return model;
-	}
+    private static BlockStateModel getStageModel(Identifier species, String directory, int stage) {
+        if (species != null) {
+            BlockStateModel model = AgriCraftClient.getBlockModel(species.withPath(path -> directory + path + "_stage" + stage));
+            if (model != null) {
+                return model;
+            }
+        }
+        return AgriCraftClient.getBlockModel(UNKNOWN_PLANT);
+    }
 
-	@ApiStatus.Internal
-	final class InstanceHolder {
-
-		private static AgriClientApi instance = null;
-
-		private InstanceHolder() {}
-
-	}
-
+    @ApiStatus.Internal
+    final class InstanceHolder {
+        private static AgriClientApi instance;
+        private InstanceHolder() {}
+    }
 }

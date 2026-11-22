@@ -6,9 +6,9 @@ import com.mojang.serialization.DataResult;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Defines a gene from AgriCraft's genome for plants and seeds
@@ -18,11 +18,11 @@ import java.util.List;
  */
 public interface AgriGene<T> {
 
-	ResourceKey<Registry<AgriGene<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("agricraft", "gene"));
+	ResourceKey<Registry<AgriGene<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("agricraft", "gene"));
 
-	Codec<AgriGene<?>> CODEC = ResourceLocation.CODEC.comapFlatMap(
+	Codec<AgriGene<?>> CODEC = Identifier.CODEC.comapFlatMap(
 			s -> {
-				AgriGene<?> gene = AgriApi.get().getGeneRegistry().get(s);
+				AgriGene<?> gene = AgriApi.get().getGeneRegistry().getValue(s);
 				if (gene == null) {
 					return DataResult.error(() -> "The gene " + s + " is not present in the gene registry");
 				} else {
@@ -70,7 +70,7 @@ public interface AgriGene<T> {
 	 * @param tooltipComponents the list to add the components to
 	 * @param trait             the value of the gene
 	 */
-	void addTooltip(List<Component> tooltipComponents, T trait);
+	void addTooltip(Consumer<Component> tooltipComponents, T trait);
 
 	/**
 	 * @return the dominant color as an argb int
@@ -85,7 +85,7 @@ public interface AgriGene<T> {
 	/**
 	 * @return its id in the gene registry
 	 */
-	default ResourceLocation getId() {
+	default Identifier getId() {
 		return AgriApi.get().getGeneRegistry().getKey(this);
 	}
 

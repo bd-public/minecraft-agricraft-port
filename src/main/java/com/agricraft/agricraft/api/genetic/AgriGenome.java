@@ -11,8 +11,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.TooltipFlag;
+
+import java.util.function.Consumer;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -28,9 +30,9 @@ import java.util.function.ToIntFunction;
  */
 public class AgriGenome {
 
-	public static Codec<AgriGene<?>> GENE_CODEC = ResourceLocation.CODEC.comapFlatMap(
+	public static Codec<AgriGene<?>> GENE_CODEC = Identifier.CODEC.comapFlatMap(
 			s -> {
-				AgriGene<?> gene = AgriApi.get().getGeneRegistry().get(s);
+				AgriGene<?> gene = AgriApi.get().getGeneRegistry().getValue(s);
 				if (gene == null) {
 					return DataResult.error(() -> "The gene " + s + " is not present in the gene registry");
 				} else {
@@ -39,7 +41,7 @@ public class AgriGenome {
 			},
 			AgriGene::getId
 	);
-	public static StreamCodec<ByteBuf, AgriGene<?>> GENE_STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(resourceLocation -> AgriApi.get().getGeneRegistry().get(resourceLocation), AgriGene::getId);
+	public static StreamCodec<ByteBuf, AgriGene<?>> GENE_STREAM_CODEC = Identifier.STREAM_CODEC.map(resourceLocation -> AgriApi.get().getGeneRegistry().getValue(resourceLocation), AgriGene::getId);
 
 	public static Codec<AgriGenome> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.unboundedMap(GENE_CODEC, Codec.STRING.listOf()).fieldOf("chromosomes").forGetter(genome -> encode(genome.chromosomes))
@@ -62,17 +64,17 @@ public class AgriGenome {
 	}
 
 	public AgriGenome(AgriPlant plant) {
-		this(plant.getId().orElse(ResourceLocation.fromNamespaceAndPath("agricraft", "")));
+		this(plant.getId().orElse(Identifier.fromNamespaceAndPath("agricraft", "")));
 	}
 
-	public AgriGenome(ResourceLocation species) {
+	public AgriGenome(Identifier species) {
 		this.chromosomes = new HashMap<>();
 		GeneSpecies geneSpecies = AgriCraftGenes.SPECIES.get();
 		chromosomes.put(geneSpecies, geneSpecies.chromosome(species.toString()));
-		AgriApi.get().getStatRegistry().holders()
+		AgriApi.get().getStatRegistry().listElements()
 				.forEach(stat -> {
 					// this should work, until someone change the type of the gene
-					GeneStat gene = (GeneStat) AgriApi.get().getGeneRegistry().get(stat.key().location());
+					GeneStat gene = (GeneStat) AgriApi.get().getGeneRegistry().getValue(stat.key().identifier());
 					if (gene != null) {
 						this.chromosomes.put(gene, gene.chromosome(stat.value().getMin()));
 					}
@@ -140,7 +142,7 @@ public class AgriGenome {
 		return AgriApi.get().getStatRegistry().stream().map(AgriStat::getGene).map(this.chromosomes::get).map(c -> (Chromosome<Integer>) c).toList();
 	}
 
-	public void appendHoverText(List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+	public void appendHoverText(Consumer<Component> tooltipComponents, TooltipFlag isAdvanced) {
 		if (isAdvanced.isAdvanced()) {
 			AgriCraftGenes.SPECIES.get().addTooltip(tooltipComponents, this.species().trait());
 		}
@@ -211,10 +213,10 @@ public class AgriGenome {
 		}
 
 		public Builder randomStats(ToIntFunction<AgriStat> randomizer) {
-			AgriApi.get().getStatRegistry().holders()
+			AgriApi.get().getStatRegistry().listElements()
 					.forEach(stat -> {
 						// this should work, until someone change the type of the gene
-						GeneStat gene = (GeneStat) AgriApi.get().getGeneRegistry().get(stat.key().location());
+						GeneStat gene = (GeneStat) AgriApi.get().getGeneRegistry().getValue(stat.key().identifier());
 						if (gene != null) {
 							int first = randomizer.applyAsInt(stat.value());
 							int second = randomizer.applyAsInt(stat.value());

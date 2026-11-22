@@ -9,7 +9,7 @@ import com.agricraft.agricraft.common.item.JournalItem;
 import com.agricraft.agricraft.common.registry.AgriDataComponents;
 import com.agricraft.agricraft.common.registry.AgriMenuTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -41,7 +41,7 @@ public class SeedAnalyzerMenu extends AbstractContainerMenu {
 				super.set(stack);
 				if (analyzer.hasJournal() && !stack.isEmpty()) {
 					ItemStack journal = analyzer.getJournal();
-					JournalItem.researchPlant(journal, ResourceLocation.parse(AgriSeedItem.getSpecies(stack)));
+					JournalItem.researchPlant(journal, Identifier.parse(AgriSeedItem.getSpecies(stack)));
 				}
 //				analyzer.setChanged();
 			}

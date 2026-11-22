@@ -13,8 +13,8 @@ public final class AgriCraftConfig {
 			.comment("Set to false to disable planting of (agricraft) seeds outside crop sticks")
 			.define("plant_off_crop_sticks", true);
 	public static final ModConfigSpec.BooleanValue CROP_STICKS_COLLIDE = BUILDER
-			.comment("Set to false to disable collision boxes on crop sticks")
-			.define("crop_sticks_collide", true);
+			.comment("Set to true to make crop sticks block movement. Disabled by default.")
+			.define("crop_sticks_collide", false);
 	public static final ModConfigSpec.BooleanValue ONLY_FERTILE_CROPS_SPREAD = BUILDER
 			.comment("Set to true to allow only fertile plants to be able to cause, participate in, or contribute to a spreading / mutation action (note that this may cause issues with obtaining some specific plants)")
 			.define("only_fertile_crops_spread", false);

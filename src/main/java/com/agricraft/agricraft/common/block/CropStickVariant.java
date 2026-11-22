@@ -8,6 +8,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
+import java.util.Locale;
 
 public enum CropStickVariant implements StringRepresentable {
 	WOODEN,
@@ -16,7 +17,7 @@ public enum CropStickVariant implements StringRepresentable {
 
 	@Override
 	public String getSerializedName() {
-		return this.name().toLowerCase();
+		return this.name().toLowerCase(Locale.ROOT);
 	}
 
 	public SoundType getSound() {

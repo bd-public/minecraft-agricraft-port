@@ -3,12 +3,8 @@ package com.agricraft.agricraft.common.item;
 import com.agricraft.agricraft.common.block.CropBlock;
 import com.agricraft.agricraft.common.block.CropStickVariant;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -22,8 +18,8 @@ public class CropSticksItem extends BlockItem {
 
 	private final CropStickVariant variant;
 
-	public CropSticksItem(Block block, CropStickVariant variant) {
-		super(block, (variant == CropStickVariant.IRON || variant == CropStickVariant.OBSIDIAN) ? new Item.Properties().fireResistant() : new Item.Properties());
+	public CropSticksItem(Block block, Item.Properties properties, CropStickVariant variant) {
+		super(block, (variant == CropStickVariant.IRON || variant == CropStickVariant.OBSIDIAN) ? properties.fireResistant() : properties);
 		this.variant = variant;
 	}
 
@@ -48,8 +44,8 @@ public class CropSticksItem extends BlockItem {
 	}
 
 	protected InteractionResult applyToExisting(Level world, BlockPos pos, BlockState state, Player player, InteractionHand hand) {
-		ItemInteractionResult result = CropBlock.applyCropSticks(world, pos, state, this.getVariant());
-		if(result == ItemInteractionResult.SUCCESS) {
+		InteractionResult result = CropBlock.applyCropSticks(world, pos, state, this.getVariant());
+		if(result == InteractionResult.SUCCESS) {
 			if(player != null) {
 				ItemStack stack = player.getItemInHand(hand);
 				if(!player.isCreative()) {
@@ -57,17 +53,7 @@ public class CropSticksItem extends BlockItem {
 				}
 			}
 		}
-		return result.result();
-	}
-
-	@Override
-	public String getDescriptionId() {
-		return "item.agricraft." + variant.getSerializedName() + "_crop_sticks";
-	}
-
-	@Override
-	public boolean canBeHurtBy(ItemStack stack, DamageSource source) {
-		return !stack.has(DataComponents.FIRE_RESISTANT) || !source.is(DamageTypeTags.IS_FIRE);
+		return result;
 	}
 
 }

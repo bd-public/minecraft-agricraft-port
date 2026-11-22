@@ -2,7 +2,7 @@ package com.agricraft.agricraft.api.plant;
 
 import com.agricraft.agricraft.api.crop.AgriCrop;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -135,7 +135,7 @@ public interface IAgriPlantModifier {
 	 * @param entity the entity which used the item, can be null if usage happens through automation
 	 * @return an empty optional to allow continuation of default right click behaviour, an optional containing an action result to pass to the right click chain, prevents default behaviour
 	 */
-	default Optional<ItemInteractionResult> onRightClickPre(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
+	default Optional<InteractionResult> onRightClickPre(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
 		return Optional.empty();
 	}
 
@@ -148,7 +148,7 @@ public interface IAgriPlantModifier {
 	 * @param entity the entity which used the item, can be null if usage happens through automation
 	 * @return an optional containing an action result to pass to the right click chain, or empty to continue the default chain
 	 */
-	default Optional<ItemInteractionResult> onRightClickPost(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
+	default Optional<InteractionResult> onRightClickPost(AgriCrop crop, ItemStack stack, @Nullable Entity entity) {
 		return Optional.empty();
 	}
 

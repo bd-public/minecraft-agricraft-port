@@ -19,7 +19,7 @@ import com.agricraft.agricraft.api.tools.seedbag.BagSorter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -70,19 +70,19 @@ public interface AgriApi {
 	Optional<Registry<AgriFertilizer>> getFertilizerRegistry(RegistryAccess registryAccess);
 
 
-	default Optional<AgriPlant> getPlant(ResourceLocation id) {
+	default Optional<AgriPlant> getPlant(Identifier id) {
 		return getPlantRegistry().flatMap(reg -> reg.getOptional(id));
 	}
 
-	default Optional<AgriPlant> getPlant(ResourceLocation id, RegistryAccess registryAccess) {
+	default Optional<AgriPlant> getPlant(Identifier id, RegistryAccess registryAccess) {
 		return getPlantRegistry(registryAccess).flatMap(reg -> reg.getOptional(id));
 	}
 
-	default Optional<AgriWeed> getWeed(ResourceLocation id) {
+	default Optional<AgriWeed> getWeed(Identifier id) {
 		return this.getWeedRegistry().flatMap(reg -> reg.getOptional(id));
 	}
 
-	default Optional<AgriWeed> getWeed(ResourceLocation id, RegistryAccess registryAccess) {
+	default Optional<AgriWeed> getWeed(Identifier id, RegistryAccess registryAccess) {
 		return this.getWeedRegistry(registryAccess).flatMap(reg -> reg.getOptional(id));
 	}
 
@@ -99,13 +99,13 @@ public interface AgriApi {
 		return registry.stream().filter(soil -> soil.isVariant(blockState)).findFirst();
 	}
 
-	default Optional<AgriMutation> getMutation(ResourceLocation id) {
+	default Optional<AgriMutation> getMutation(Identifier id) {
 		return getMutationRegistry().flatMap(reg -> reg.getOptional(id));
 	}
 
 	default Stream<AgriMutation> getMutationsFromParents(String parent1, String parent2) {
-		ResourceLocation p1 = ResourceLocation.parse(parent1);
-		ResourceLocation p2 = ResourceLocation.parse(parent2);
+		Identifier p1 = Identifier.parse(parent1);
+		Identifier p2 = Identifier.parse(parent2);
 		return getMutationRegistry().map(reg -> reg.stream()
 						.filter(mutation -> (mutation.parent1().equals(p1) && mutation.parent2().equals(p2))
 								|| (mutation.parent1().equals(p2) && mutation.parent2().equals(p1))))

@@ -1,6 +1,6 @@
 package com.agricraft.agricraft.api.tools.seedbag;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Comparator;
 
@@ -9,6 +9,6 @@ import java.util.Comparator;
  */
 public interface BagSorter extends Comparator<BagEntry> {
 
-	ResourceLocation getId();
+	Identifier getId();
 
 }

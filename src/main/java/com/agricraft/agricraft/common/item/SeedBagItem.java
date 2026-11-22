@@ -21,7 +21,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,6 +33,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+
+import java.util.function.Consumer;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -48,8 +51,8 @@ public class SeedBagItem extends Item {
 	public static final List<BagSorter> SORTERS = new ArrayList<>();
 	public static final BagSorter DEFAULT_SORTER = new BagSorter() {
 		@Override
-		public ResourceLocation getId() {
-			return ResourceLocation.fromNamespaceAndPath("agricraft", "default");
+		public Identifier getId() {
+			return Identifier.fromNamespaceAndPath("agricraft", "default");
 		}
 
 		@Override
@@ -274,15 +277,15 @@ public class SeedBagItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltipComponents, TooltipFlag isAdvanced) {
 		Data data = stack.get(AgriDataComponents.SEED_BAG_DATA);
 		if (isEmpty(stack) || data == null) {
-			tooltipComponents.add(Component.translatable("agricraft.tooltip.bag.empty").withStyle(ChatFormatting.DARK_GRAY));
+			tooltipComponents.accept(Component.translatable("agricraft.tooltip.bag.empty").withStyle(ChatFormatting.DARK_GRAY));
 		} else {
-			tooltipComponents.add(Component.translatable("agricraft.tooltip.bag.content", size(stack)).append(LangUtils.seedName(data.plants().getFirst().genome().species().trait())).withStyle(ChatFormatting.DARK_GRAY));
+			tooltipComponents.accept(Component.translatable("agricraft.tooltip.bag.content", size(stack)).append(LangUtils.seedName(data.plants().getFirst().genome().species().trait())).withStyle(ChatFormatting.DARK_GRAY));
 		}
 		String id = SORTERS.get(data.sorter).getId().toString().replace(":", ".");
-		tooltipComponents.add(Component.translatable("agricraft.tooltip.bag.sorter")
+		tooltipComponents.accept(Component.translatable("agricraft.tooltip.bag.sorter")
 				.append(Component.translatable("agricraft.tooltip.bag.sorter." + id))
 				.withStyle(ChatFormatting.DARK_GRAY));
 	}
@@ -324,15 +327,15 @@ public class SeedBagItem extends Item {
 	public static class StatSorter implements BagSorter {
 
 		private final Supplier<AgriStat> stat;
-		private final ResourceLocation id;
+		private final Identifier id;
 
-		public StatSorter(Supplier<AgriStat> stat, ResourceLocation id) {
+		public StatSorter(Supplier<AgriStat> stat, Identifier id) {
 			this.stat = stat;
 			this.id = id;
 		}
 
 		@Override
-		public ResourceLocation getId() {
+		public Identifier getId() {
 			return this.id;
 		}
 

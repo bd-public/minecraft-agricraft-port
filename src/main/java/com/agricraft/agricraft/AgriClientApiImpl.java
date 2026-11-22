@@ -24,7 +24,7 @@ import com.agricraft.agricraft.common.registry.AgriDataComponents;
 import com.agricraft.agricraft.common.registry.AgriItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 
 public class AgriClientApiImpl implements AgriClientApi {
 
-	private static final Map<ResourceLocation, JournalPageDrawer<?>> DRAWERS = new HashMap<>();
+	private static final Map<Identifier, JournalPageDrawer<?>> DRAWERS = new HashMap<>();
 	private static final List<Predicate<Player>> ALLOWING_PREDICATE = new ArrayList<>();
 	private static final Set<MagnifyingInspector> INSPECTORS = new HashSet<>();
 
@@ -74,7 +74,7 @@ public class AgriClientApiImpl implements AgriClientApi {
 			Vec3 lookAngle = player.getLookAngle();
 			if (-0.1 <= lookAngle.z && lookAngle.z <= 0.1) {
 				HitResult pick = Minecraft.getInstance().getCameraEntity().pick(100, 0, false);
-				double sunOrientation = level.getTimeOfDay(0);  // angle in circle in [0,1]
+				double sunOrientation = Math.floorMod(level.getDefaultClockTime(), 24000L) / 24000.0;  // angle in circle in [0,1]
 				double playerOrientation = Math.atan2(lookAngle.x, lookAngle.y) / Math.PI / 2.0;  // angle in a circle in [0,1]
 				// modify the orientation of the player to be in the same system as the sun's
 				if (-0.5 < playerOrientation && playerOrientation < 0) {
@@ -98,7 +98,7 @@ public class AgriClientApiImpl implements AgriClientApi {
 	}
 
 	@Override
-	public <T extends JournalPage> void registerJournalPageDrawer(ResourceLocation id, JournalPageDrawer<T> drawer) {
+	public <T extends JournalPage> void registerJournalPageDrawer(Identifier id, JournalPageDrawer<T> drawer) {
 		DRAWERS.put(id, drawer);
 	}
 

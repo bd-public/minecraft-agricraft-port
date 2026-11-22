@@ -3,7 +3,7 @@ package com.agricraft.agricraft.api.codecs;
 import com.agricraft.agricraft.api.requirement.AgriSeason;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,8 +70,8 @@ public record AgriRequirement(AgriSoilCondition<AgriSoilCondition.Humidity> soil
 					.acidity(requirement.soilAcidity.value(), requirement.soilAcidity.type(), requirement.soilAcidity.toleranceFactor())
 					.nutrients(requirement.soilNutrients.value(), requirement.soilNutrients.type(), requirement.soilNutrients.toleranceFactor())
 					.light(requirement.minLight, requirement.maxLight, requirement.lightToleranceFactor)
-					.biomes(requirement.biomes.ignoreFromStrength(), requirement.biomes.blacklist(), requirement.biomes.values().toArray(new ResourceLocation[0]))
-					.dimensions(requirement.dimensions.ignoreFromStrength(), requirement.dimensions.blacklist(), requirement.dimensions.values().toArray(new ResourceLocation[0]))
+					.biomes(requirement.biomes.ignoreFromStrength(), requirement.biomes.blacklist(), requirement.biomes.values().toArray(new Identifier[0]))
+					.dimensions(requirement.dimensions.ignoreFromStrength(), requirement.dimensions.blacklist(), requirement.dimensions.values().toArray(new Identifier[0]))
 					.seasons(requirement.seasons().toArray(new AgriSeason[0]))
 					.blocks(requirement.blockConditions.toArray(new AgriBlockCondition[0]))
 					.fluid(requirement.fluidCondition);
@@ -103,32 +103,32 @@ public record AgriRequirement(AgriSoilCondition<AgriSoilCondition.Humidity> soil
 			return this;
 		}
 
-		public Builder biomes(ResourceLocation... biomes) {
+		public Builder biomes(Identifier... biomes) {
 			this.biomes = new AgriListCondition(List.of(biomes), false, -1);
 			return this;
 		}
 
-		public Builder biomes(boolean blacklist, ResourceLocation... biomes) {
+		public Builder biomes(boolean blacklist, Identifier... biomes) {
 			this.biomes = new AgriListCondition(List.of(biomes), blacklist, -1);
 			return this;
 		}
 
-		public Builder biomes(int ignoreFromStrength, boolean blacklist, ResourceLocation... biomes) {
+		public Builder biomes(int ignoreFromStrength, boolean blacklist, Identifier... biomes) {
 			this.biomes = new AgriListCondition(List.of(biomes), blacklist, ignoreFromStrength);
 			return this;
 		}
 
-		public Builder dimensions(ResourceLocation... dimensions) {
+		public Builder dimensions(Identifier... dimensions) {
 			this.dimensions = new AgriListCondition(List.of(dimensions), false, -1);
 			return this;
 		}
 
-		public Builder dimensions(boolean blacklist, ResourceLocation... dimensions) {
+		public Builder dimensions(boolean blacklist, Identifier... dimensions) {
 			this.dimensions = new AgriListCondition(List.of(dimensions), blacklist, -1);
 			return this;
 		}
 
-		public Builder dimensions(int ignoreFromStrength, boolean blacklist, ResourceLocation... dimensions) {
+		public Builder dimensions(int ignoreFromStrength, boolean blacklist, Identifier... dimensions) {
 			this.dimensions = new AgriListCondition(List.of(dimensions), blacklist, ignoreFromStrength);
 			return this;
 		}

@@ -3,14 +3,17 @@ package com.agricraft.agricraft.api;
 import com.agricraft.agricraft.api.codecs.AgriSoilValue;
 import com.agricraft.agricraft.api.requirement.AgriSeason;
 import com.agricraft.agricraft.api.stat.AgriStat;
+import com.agricraft.agricraft.compat.mysticalagriculture.MysticalAgriculturePlugin;
+import net.minecraft.resources.Identifier;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import java.util.Locale;
 
 public class LangUtils {
 
 	public static Component plantName(String plantId) {
-		return again("plant.agricraft." + plantId.replace(":", ".").replace("/", "."));
+		return MysticalAgriculturePlugin.cropName(Identifier.tryParse(plantId), again("plant.agricraft." + plantId.replace(":", ".").replace("/", ".")));
 	}
 
 	public static Component plantDescription(String plantId) {
@@ -27,7 +30,7 @@ public class LangUtils {
 	}
 
 	public static Component seedName(String plantId) {
-		return again("seed.agricraft." + plantId.replace(":", ".").replace("/", "."));
+		return MysticalAgriculturePlugin.cropName(Identifier.tryParse(plantId), again("seed.agricraft." + plantId.replace(":", ".").replace("/", ".")));
 	}
 
 	public static Component soilName(String soilId) {
@@ -35,7 +38,7 @@ public class LangUtils {
 	}
 
 	public static Component soilPropertyName(String property, AgriSoilValue value) {
-		return Component.translatable("agricraft.soil." + property + "." + value.name().toLowerCase());
+		return Component.translatable("agricraft.soil." + property + "." + value.name().toLowerCase(Locale.ROOT));
 	}
 
 	public static MutableComponent statName(AgriStat stat) {
@@ -43,7 +46,7 @@ public class LangUtils {
 	}
 
 	public static Component seasonName(AgriSeason season) {
-		return Component.translatable("agricraft.season." + season.name().toLowerCase());
+		return Component.translatable("agricraft.season." + season.name().toLowerCase(Locale.ROOT));
 	}
 
 	/**

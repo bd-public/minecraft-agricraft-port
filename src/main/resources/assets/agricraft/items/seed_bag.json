@@ -1,0 +1,26 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "agricraft:seed_bag",
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "agricraft:item/seed_bag"
+    },
+    "entries": [
+      {
+        "threshold": 0.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "agricraft:item/seed_bag_empty"
+        }
+      },
+      {
+        "threshold": 1,
+        "model": {
+          "type": "minecraft:model",
+          "model": "agricraft:item/seed_bag_full"
+        }
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@ package com.agricraft.agricraft.api.codecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public record AgriFluidCondition(ExtraCodecs.TagOrElementLocation fluid, List<St
 			Codec.STRING.listOf().comapFlatMap(AgriFluidCondition::readStates, list -> list).optionalFieldOf("states", List.of()).forGetter(stateCondition -> stateCondition.states)
 	).apply(instance, AgriFluidCondition::new));
 
-	public static final AgriFluidCondition EMPTY = new AgriFluidCondition(new ExtraCodecs.TagOrElementLocation(ResourceLocation.withDefaultNamespace("empty"), false), new ArrayList<>());
+	public static final AgriFluidCondition EMPTY = new AgriFluidCondition(new ExtraCodecs.TagOrElementLocation(Identifier.withDefaultNamespace("empty"), false), new ArrayList<>());
 
 	public AgriFluidCondition(ExtraCodecs.TagOrElementLocation block, Optional<List<String>> states) {
 		this(block, states.orElse(new ArrayList<>()));
@@ -43,7 +43,7 @@ public record AgriFluidCondition(ExtraCodecs.TagOrElementLocation fluid, List<St
 
 	public static class Builder {
 
-		ExtraCodecs.TagOrElementLocation item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.withDefaultNamespace("air"), false);
+		ExtraCodecs.TagOrElementLocation item = new ExtraCodecs.TagOrElementLocation(Identifier.withDefaultNamespace("air"), false);
 		List<String> states = new ArrayList<>();
 
 		public AgriFluidCondition build() {
@@ -51,22 +51,22 @@ public record AgriFluidCondition(ExtraCodecs.TagOrElementLocation fluid, List<St
 		}
 
 		public Builder fluid(String location) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), false);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), false);
 			return this;
 		}
 
 		public Builder fluid(String namespace, String path) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), false);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), false);
 			return this;
 		}
 
 		public Builder tag(String location) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(location), true);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.parse(location), true);
 			return this;
 		}
 
 		public Builder tag(String namespace, String path) {
-			this.item = new ExtraCodecs.TagOrElementLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), true);
+			this.item = new ExtraCodecs.TagOrElementLocation(Identifier.fromNamespaceAndPath(namespace, path), true);
 			return this;
 		}
 

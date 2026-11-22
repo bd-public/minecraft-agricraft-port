@@ -12,10 +12,10 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class AgriFertilizer {
 
-	public static final ResourceKey<Registry<AgriFertilizer>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "fertilizer"));
+	public static final ResourceKey<Registry<AgriFertilizer>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "fertilizer"));
 
 	public static final Codec<AgriFertilizer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.STRING.listOf().fieldOf("mods").forGetter(agriFertilizer -> agriFertilizer.mods),
@@ -101,15 +101,15 @@ public class AgriFertilizer {
 		return this.killPlant;
 	}
 
-	public boolean affects(ResourceLocation plantId) {
+	public boolean affects(Identifier plantId) {
 		return !isNeutralOn(plantId);
 	}
 
-	public boolean isNeutralOn(ResourceLocation plantId) {
+	public boolean isNeutralOn(Identifier plantId) {
 		return neutralOn.stream().flatMap(tag -> TagUtils.plants(tag)).anyMatch(rl -> rl.equals(plantId));
 	}
 
-	public boolean isNegativeOn(ResourceLocation plantId) {
+	public boolean isNegativeOn(Identifier plantId) {
 		return negativeOn.stream().flatMap(tag -> TagUtils.plants(tag)).anyMatch(rl -> rl.equals(plantId));
 	}
 
@@ -135,7 +135,7 @@ public class AgriFertilizer {
 	 * @param entity       The entity applying the fertilizer (can be null if fertilized through automation)
 	 * @return the result to handle the item use call chain
 	 */
-	public ItemInteractionResult applyFertilizer(Level level, BlockPos pos, IAgriFertilizable fertilizable, ItemStack stack, RandomSource random, @Nullable LivingEntity entity) {
+	public InteractionResult applyFertilizer(Level level, BlockPos pos, IAgriFertilizable fertilizable, ItemStack stack, RandomSource random, @Nullable LivingEntity entity) {
 		if (fertilizable instanceof AgriCrop crop) {
 			String type = "neutral";
 			for (int i = 0; i < this.potency; i++) {
@@ -171,15 +171,15 @@ public class AgriFertilizer {
 			if ((entity instanceof Player) && !(((Player) entity).isCreative())) {
 				stack.shrink(1);
 			}
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.FAIL;
+		return InteractionResult.FAIL;
 	}
 
 	protected void spawnParticles(Level world, BlockPos pos, String type, RandomSource rand) {
 		this.getParticles(type)
 				.forEach(effect -> {
-					ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.parse(effect.particle()));
+					ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.parse(effect.particle()));
 					if (!(particle instanceof ParticleOptions)) {
 						return;
 					}
@@ -300,26 +300,26 @@ public class AgriFertilizer {
 
 		public Builder neutralOn(String... neutralOn) {
 			for (String str : neutralOn) {
-				this.neutralOn.add(new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(str), false));
+				this.neutralOn.add(new ExtraCodecs.TagOrElementLocation(Identifier.parse(str), false));
 			}
 			return this;
 		}
 		public Builder neutralOnTag(String... neutralOn) {
 			for (String str : neutralOn) {
-				this.neutralOn.add(new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(str), true));
+				this.neutralOn.add(new ExtraCodecs.TagOrElementLocation(Identifier.parse(str), true));
 			}
 			return this;
 		}
 
 		public Builder negativeOn(String... negativeOn) {
 			for (String str : negativeOn) {
-				this.negativeOn.add(new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(str), false));
+				this.negativeOn.add(new ExtraCodecs.TagOrElementLocation(Identifier.parse(str), false));
 			}
 			return this;
 		}
 		public Builder negativeOnTag(String... negativeOn) {
 			for (String str : negativeOn) {
-				this.negativeOn.add(new ExtraCodecs.TagOrElementLocation(ResourceLocation.parse(str), true));
+				this.negativeOn.add(new ExtraCodecs.TagOrElementLocation(Identifier.parse(str), true));
 			}
 			return this;
 		}

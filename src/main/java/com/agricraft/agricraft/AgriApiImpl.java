@@ -74,52 +74,52 @@ public class AgriApiImpl implements AgriApi {
 
 	@Override
 	public Optional<Registry<AgriPlant>> getPlantRegistry() {
-		return SideUtils.getRegistryAccess().flatMap(reg -> reg.registry(AgriPlant.REGISTRY_KEY));
+		return SideUtils.getRegistryAccess().flatMap(reg -> reg.lookup(AgriPlant.REGISTRY_KEY));
 	}
 
 	@Override
 	public Optional<Registry<AgriPlant>> getPlantRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AgriPlant.REGISTRY_KEY);
+		return registryAccess.lookup(AgriPlant.REGISTRY_KEY);
 	}
 
 	@Override
 	public Optional<Registry<AgriWeed>> getWeedRegistry() {
-		return SideUtils.getRegistryAccess().flatMap(reg -> reg.registry(AgriWeed.REGISTRY_KEY));
+		return SideUtils.getRegistryAccess().flatMap(reg -> reg.lookup(AgriWeed.REGISTRY_KEY));
 	}
 
 	@Override
 	public Optional<Registry<AgriWeed>> getWeedRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AgriWeed.REGISTRY_KEY);
+		return registryAccess.lookup(AgriWeed.REGISTRY_KEY);
 	}
 
 	@Override
 	public Optional<Registry<AgriSoil>> getSoilRegistry() {
-		return SideUtils.getRegistryAccess().flatMap(reg -> reg.registry(AgriSoil.REGISTRY_KEY));
+		return SideUtils.getRegistryAccess().flatMap(reg -> reg.lookup(AgriSoil.REGISTRY_KEY));
 	}
 
 	@Override
 	public Optional<Registry<AgriSoil>> getSoilRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AgriSoil.REGISTRY_KEY);
+		return registryAccess.lookup(AgriSoil.REGISTRY_KEY);
 	}
 
 	@Override
 	public Optional<Registry<AgriMutation>> getMutationRegistry() {
-		return SideUtils.getRegistryAccess().flatMap(reg -> reg.registry(AgriMutation.REGISTRY_KEY));
+		return SideUtils.getRegistryAccess().flatMap(reg -> reg.lookup(AgriMutation.REGISTRY_KEY));
 	}
 
 	@Override
 	public Optional<Registry<AgriMutation>> getMutationRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AgriMutation.REGISTRY_KEY);
+		return registryAccess.lookup(AgriMutation.REGISTRY_KEY);
 	}
 
 	@Override
 	public Optional<Registry<AgriFertilizer>> getFertilizerRegistry() {
-		return SideUtils.getRegistryAccess().flatMap(reg -> reg.registry(AgriFertilizer.REGISTRY_KEY));
+		return SideUtils.getRegistryAccess().flatMap(reg -> reg.lookup(AgriFertilizer.REGISTRY_KEY));
 	}
 
 	@Override
 	public Optional<Registry<AgriFertilizer>> getFertilizerRegistry(RegistryAccess registryAccess) {
-		return registryAccess.registry(AgriFertilizer.REGISTRY_KEY);
+		return registryAccess.lookup(AgriFertilizer.REGISTRY_KEY);
 	}
 
 	@Override

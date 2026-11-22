@@ -10,13 +10,14 @@ import com.agricraft.agricraft.common.item.journal.GeneticsPage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 
-	private final ResourceLocation DNA_SCHEMATIC = ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/journal/dna_schematic.png");
+	private final Identifier DNA_SCHEMATIC = Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "textures/gui/journal/dna_schematic.png");
 
 	private final Component CROP_BREEDING = Component.translatable("agricraft.journal.crop_breeding");
 	private final Component PARAGRAPH_L_1 = Component.translatable("agricraft.journal.crop_breeding.paragraph_1");
@@ -33,14 +34,14 @@ public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 	private final Component PARAGRAPH_MUTATIVITY = Component.translatable("agricraft.journal.stats.mutativity");
 
 	@Override
-	public void drawLeftSheet(GuiGraphics guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawLeftSheet(GuiGraphicsExtractor guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 		float scale = 0.7F;
 		float dx = pageX + 6;
 		float dy = pageY + 7 + 10;
 		int spacing = 4;
 		// Title
-		guiGraphics.drawString(font, CROP_BREEDING, (int) dx, (int) dy, 0, false);
+		guiGraphics.text(font, CROP_BREEDING, (int) dx, (int) dy, 0, false);
 		dy += font.lineHeight;
 		dy += spacing;
 		// First paragraph
@@ -50,21 +51,21 @@ public class GeneticsPageDrawer implements JournalPageDrawer<GeneticsPage> {
 		dy += this.drawScaledText(guiGraphics, PARAGRAPH_L_2, dx, dy, scale);
 		dy += spacing;
 		// Illustration
-		guiGraphics.blit(DNA_SCHEMATIC, (int) dx, (int) dy, 0, 0, 96, 32, 96, 32);
+		guiGraphics.blit(RenderPipelines.GUI_TEXTURED, DNA_SCHEMATIC, (int) dx, (int) dy, 0, 0, 96, 32, 96, 32);
 		dy += spacing + 32;
 		// Third paragraph
 		this.drawScaledText(guiGraphics, PARAGRAPH_L_3, dx, dy, scale);
 	}
 
 	@Override
-	public void drawRightSheet(GuiGraphics guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
+	public void drawRightSheet(GuiGraphicsExtractor guiGraphics, GeneticsPage page, int pageX, int pageY, JournalData journalData) {
 		Font font = Minecraft.getInstance().font;
 
 		float dx = pageX + 6;
 		float dy = pageY + 10;
 		float spacing = 4;
 		// Title
-		guiGraphics.drawString(font, STATS, (int) dx, (int) dy, 0, false);
+		guiGraphics.text(font, STATS, (int) dx, (int) dy, 0, false);
 		dy += font.lineHeight;
 		dy += spacing;
 

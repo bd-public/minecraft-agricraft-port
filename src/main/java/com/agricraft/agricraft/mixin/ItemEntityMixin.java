@@ -3,7 +3,7 @@ package com.agricraft.agricraft.mixin;
 import com.agricraft.agricraft.api.AgriApi;
 import com.agricraft.agricraft.api.plant.AgriPlant;
 import com.agricraft.agricraft.common.item.AgriSeedItem;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +18,6 @@ public abstract class ItemEntityMixin {
 
 	@Inject(method = "fireImmune", at = @At("HEAD"), cancellable = true)
 	private void fireImmune(CallbackInfoReturnable<Boolean> cir) {
-		if (AgriApi.get().getPlant(ResourceLocation.parse(AgriSeedItem.getSpecies(this.getItem()))).map(AgriPlant::isFireproof).orElse(false)) cir.setReturnValue(true);
+		if (AgriApi.get().getPlant(Identifier.parse(AgriSeedItem.getSpecies(this.getItem()))).map(AgriPlant::isFireproof).orElse(false)) cir.setReturnValue(true);
 	}
 }

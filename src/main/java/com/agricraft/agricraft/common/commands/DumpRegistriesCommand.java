@@ -13,7 +13,7 @@ public class DumpRegistriesCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
 		dispatcher.register(Commands.literal("agricraft_dump")
-				.requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+				.requires(commandSourceStack -> commandSourceStack.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
 				.then(Commands.literal("plants").executes(commandContext -> DumpRegistriesCommand.dumpPlants()))
 				.then(Commands.literal("soils").executes(commandContext -> DumpRegistriesCommand.dumpSoils()))
 				.then(Commands.literal("mutations").executes(commandContext -> DumpRegistriesCommand.dumpMutations()))

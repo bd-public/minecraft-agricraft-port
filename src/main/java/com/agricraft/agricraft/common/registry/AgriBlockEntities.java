@@ -10,8 +10,8 @@ import static com.agricraft.agricraft.common.registry.AgriRegistries.BLOCK_ENTIT
 
 public interface AgriBlockEntities {
 
-	DeferredHolder<BlockEntityType<?>, BlockEntityType<CropBlockEntity>> CROP = BLOCK_ENTITY_TYPES.register("crop", () -> BlockEntityType.Builder.of(CropBlockEntity::new, AgriBlocks.CROP.get()).build(null));
-	DeferredHolder<BlockEntityType<?>, BlockEntityType<SeedAnalyzerBlockEntity>> SEED_ANALYZER = BLOCK_ENTITY_TYPES.register("seed_analyzer", () -> BlockEntityType.Builder.of(SeedAnalyzerBlockEntity::new, AgriBlocks.SEED_ANALYZER.get()).build(null));
+	DeferredHolder<BlockEntityType<?>, BlockEntityType<CropBlockEntity>> CROP = BLOCK_ENTITY_TYPES.register("crop", () -> new BlockEntityType<>(CropBlockEntity::new, AgriBlocks.CROP.get()));
+	DeferredHolder<BlockEntityType<?>, BlockEntityType<SeedAnalyzerBlockEntity>> SEED_ANALYZER = BLOCK_ENTITY_TYPES.register("seed_analyzer", () -> new BlockEntityType<>(SeedAnalyzerBlockEntity::new, AgriBlocks.SEED_ANALYZER.get()));
 
 	@ApiStatus.Internal
 	static void register() {}

@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,8 +35,8 @@ public class SeedAnalyzerBlock extends Block implements EntityBlock {
 	public static final BooleanProperty JOURNAL = BooleanProperty.create("journal");
 	private static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 4, 15);
 
-	public SeedAnalyzerBlock() {
-		super(Properties.of().mapColor(MapColor.WOOD).strength(2, 3).noOcclusion());
+	public SeedAnalyzerBlock(Properties properties) {
+		super(properties.mapColor(MapColor.WOOD).strength(2, 3).noOcclusion());
 		this.registerDefaultState(this.stateDefinition.any()
 				.setValue(JOURNAL, false)
 				.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
@@ -73,36 +72,36 @@ public class SeedAnalyzerBlock extends Block implements EntityBlock {
 				if (!player.addItem(seed)) {
 					level.addFreshEntity(new ItemEntity(level, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, seed));
 				}
-				return InteractionResult.sidedSuccess(level.isClientSide);
+				return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
 			}
 			// extract journal
 			if (analyzer.hasJournal() && player.getMainHandItem().isEmpty()) {
 				ItemStack journal = analyzer.extractJournal();
 				player.setItemInHand(InteractionHand.MAIN_HAND, journal);
-				return InteractionResult.sidedSuccess(level.isClientSide);
+				return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
 			}
 		}
 		return InteractionResult.FAIL;
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	protected InteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (hand == InteractionHand.OFF_HAND/* || heldItem.isEmpty()*/) {
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		}
 
 		BlockEntity blockEntity = level.getBlockEntity(pos);
 		if (!(blockEntity instanceof SeedAnalyzerBlockEntity analyzer)) {
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		}
 		if (!player.isShiftKeyDown()) {
-			if (!level.isClientSide) {
+			if (!level.isClientSide()) {
 				player.openMenu(analyzer, pos);
 			}
-			return ItemInteractionResult.CONSUME;
+			return InteractionResult.CONSUME;
 		}
 
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override

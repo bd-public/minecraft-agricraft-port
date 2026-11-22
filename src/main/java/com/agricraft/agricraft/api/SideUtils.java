@@ -12,7 +12,7 @@ public class SideUtils {
 
 	public static Optional<RegistryAccess> getRegistryAccess() {
 		if (ServerLifecycleHooks.getCurrentServer() == null) {
-			if (FMLEnvironment.dist == Dist.CLIENT && Minecraft.getInstance().level != null) {
+			if (FMLEnvironment.getDist() == Dist.CLIENT && Minecraft.getInstance().level != null) {
 				return Optional.of(Minecraft.getInstance().level.registryAccess());
 			}
 		} else {

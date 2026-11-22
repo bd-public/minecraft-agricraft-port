@@ -1,0 +1,40 @@
+{
+  "type": "agricraft:grass",
+  "chance": 0.2,
+  "conditions": [
+    {
+      "condition": "minecraft:inverted",
+      "term": {
+        "condition": "minecraft:match_tool",
+        "predicate": {
+          "items": "#c:tools/shear"
+        }
+      }
+    },
+    {
+      "block": "minecraft:tall_grass",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "reset": true,
+  "seeds": [
+    {
+      "max_stat": 1,
+      "min_stat": 1,
+      "plant": "minecraft:wheat",
+      "weight": 10
+    },
+    {
+      "max_stat": 1,
+      "min_stat": 1,
+      "plant": "minecraft:carrot",
+      "weight": 10
+    },
+    {
+      "max_stat": 1,
+      "min_stat": 1,
+      "plant": "minecraft:potato",
+      "weight": 10
+    }
+  ]
+}

@@ -2,4 +2,4 @@
 .gradle/
 build/
 runs/
-src/generated/
+src/generated/resources/.cache/

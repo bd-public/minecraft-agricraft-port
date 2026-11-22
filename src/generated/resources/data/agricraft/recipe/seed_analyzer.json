@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "b": "minecraft:stone_slab",
+    "g": "#c:glass_blocks/colorless",
+    "p": "#minecraft:planks",
+    "s": "#c:rods/wooden",
+    "w": "#minecraft:wooden_slabs"
+  },
+  "pattern": [
+    "sgs",
+    " bs",
+    "pwp"
+  ],
+  "result": {
+    "count": 1,
+    "id": "agricraft:seed_analyzer"
+  }
+}

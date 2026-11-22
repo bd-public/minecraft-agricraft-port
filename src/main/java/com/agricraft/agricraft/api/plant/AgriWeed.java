@@ -11,7 +11,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 // TODO: @Ketheroth convert nbt to component ?
 public class AgriWeed {
 
-	public static final ResourceKey<Registry<AgriWeed>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "weed"));
+	public static final ResourceKey<Registry<AgriWeed>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "weed"));
 
 	public static final Codec<AgriWeed> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.STRING.listOf().fieldOf("mods").forGetter(weed -> weed.mods),

@@ -4,7 +4,7 @@ import com.agricraft.agricraft.api.AgriApi;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class GeneSpecies implements AgriGene<String> {
 
@@ -40,8 +40,8 @@ public class GeneSpecies implements AgriGene<String> {
 	}
 
 	@Override
-	public void addTooltip(List<Component> tooltipComponents, String trait) {
-		tooltipComponents.add(Component.translatable("agricraft.gene.agricraft.species").append(": " + trait).withStyle(ChatFormatting.DARK_GRAY));
+	public void addTooltip(Consumer<Component> tooltipComponents, String trait) {
+		tooltipComponents.accept(Component.translatable("agricraft.gene.agricraft.species").append(": " + trait).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	@Override

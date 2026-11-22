@@ -1,151 +1,86 @@
 plugins {
 	id 'java-library'
-	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'net.neoforged.gradle.userdev' version '7.0.171'
-}
-
-repositories {
-	mavenLocal()
-	maven {
-		name = "BlameJared" // JEI
-		url = "https://maven.blamejared.com/"
-		content {
-			includeGroup "mezz.jei"
-		}
-	}
-	maven {
-		name = "TerraformersMC" // EMI
-		url = "https://maven.terraformersmc.com/"
-		content {
-			includeGroup "dev.emi"
-		}
-	}
-	maven {
-		name = "BadAsIntended" // WTHIT
-		url "https://maven2.bai.lol/"
-		content {
-			includeGroup "lol.bai"
-			includeGroup "mcp.mobius.waila"
-		}
-	}
-	maven {
-		name = "CurseForge"
-		url = "https://cursemaven.com"
-		content {
-			includeGroup "curse.maven"
-		}
-	}
+	id 'net.neoforged.moddev' version '2.0.148'
 }
 
 base {
-	archivesName = mod_id + "-" + minecraft_version
+	archivesName = "${mod_id}-${minecraft_version}"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
-
-runs {
-	configureEach {
-		systemProperty 'forge.logging.markers', 'REGISTRIES'
-		systemProperty 'forge.logging.console.level', 'debug'
-		modSource project.sourceSets.main
-	}
-
-	client {
-		systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-	}
-
-	server {
-		systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-		programArgument '--nogui'
-	}
-
-	gameTestServer {
-		systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-	}
-
-	data {
-		programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(),
-				'--existing', file('src/main/resources/').getAbsolutePath(),
-				'--existing-mod', 'biomesoplenty',
-				'--existing-mod', 'pamhc2crops',
-				'--existing-mod', 'farmersdelight',
-				'--existing-mod', 'farmingforblockheads',
-				'--existing-mod', 'croptopia',
-				'--existing-mod', 'mysticalagriculture'
+repositories {
+	maven {
+		url = 'https://cursemaven.com'
+		content { includeGroup 'curse.maven' }
 	}
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+def withMysticalAgriculture = providers.gradleProperty('withMysticalAgriculture').isPresent()
+def withGameTests = providers.gradleProperty('gameTests').isPresent()
 
-configurations {
-	runtimeClasspath.extendsFrom localRuntime
+sourceSets {
+	gameTest {
+		compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+	}
+}
+
+neoForge {
+	version = neoforge_version
+	mods {
+		"${mod_id}" {
+			sourceSet sourceSets.main
+			if (withGameTests) sourceSet sourceSets.gameTest
+		}
+	}
+	runs {
+		configureEach {
+			gameDirectory = project.file(withMysticalAgriculture ? 'runs/mystical' : 'runs/standalone')
+		}
+		client { client() }
+		server {
+			server()
+			programArgument '--nogui'
+		}
+		if (withGameTests) {
+			gameTestServer {
+				type = 'gameTestServer'
+				gameDirectory = project.file(withMysticalAgriculture ? 'runs/test-mystical' : 'runs/test-standalone')
+				systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+			}
+		}
+	}
+}
+
+sourceSets.main {
+	java {
+		exclude '**/compat/emi/**', '**/compat/jade/**', '**/compat/jei/**', '**/compat/wthit/**'
+		exclude '**/compat/sereneseason/**', '**/mixin/FarmersDelightMixin.java', '**/datagen/**'
+	}
+	resources { srcDir 'src/generated/resources' }
 }
 
 dependencies {
-	implementation "net.neoforged:neoforge:${neoforge_version}"
-
-	compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-	compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
-	localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
-
-	compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-	localRuntime "dev.emi:emi-neoforge:${emi_version}"
-
-	compileOnly "curse.maven:jade-324717:5427895"  // Jade-1.21-neoforge-15.0.4-api
-	localRuntime "curse.maven:jade-324717:5427817"  // Jade-1.21-neoforge-15.0.4
-
-	compileOnly "curse.maven:pamhc2crops-361385:5581644"  // pamhc2crops-NEOFORGE-1.21.0-1.0.0
-	localRuntime "curse.maven:pamhc2crops-361385:5581644"  // pamhc2crops-NEOFORGE-1.21.0-1.0.0
-
-	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthit_version}"  // What The Hell Is That
-//	localRuntime "mcp.mobius.waila:wthit:neo-${wthit_version}"
-//	localRuntime "lol.bai:badpackets:neo-${badpackets_version}"
-
-	implementation "curse.maven:biomes-o-plenty-220318:5489686"  // Biomes O' Plenty 1.21-21.0.0.11
-	compileOnly "curse.maven:serene-seasons-291874:5429913"  // Serene Seasons 1.21-10.0.0.2
-//	localRuntime "curse.maven:serene-seasons-291874:5429913"  // Serene Seasons 1.21-10.0.0.2
-	localRuntime "curse.maven:glitchcore-955399:5483773"  // GlitchCore 1.21-2.0.0.2 (serene season / biomes o' plenty dep)
-	localRuntime "curse.maven:terrablender-940057:5429865"  // TerraBlender 1.21-4.0.0.1 (biomes o' plenty dep)
-
-	implementation "curse.maven:farmers_delight-398521:5566383"  // Farmer's Delight 1.2.4 - 1.21
-
-	implementation "curse.maven:farming_for_blockheads-261924:5623479"  // farmingforblockheads-neoforge-1.21.1-21.1.1
-	implementation "curse.maven:balm-531761:5623449"  // balm-neoforge-1.21.1-21.0.15.jar (farming for blockheads dep)
-
-	implementation "curse.maven:croptopia-415438:5571647"  // Croptopia-1.21-NEO-FORGE-3.0.9
-	implementation "curse.maven:epherolib-885449:5549595"  // EpheroLib-1.21-NEO-FORGE-1.2.0 (Croptopia dep)
-
-	implementation "curse.maven:mystical_agriculture-246640:5663085"  // MysticalAgriculture-1.21.1-8.0.4
-	implementation "curse.maven:cucumber-272335:5663120"  // Cucumber-1.21.1-8.0.3 (Mystical Agriculture dep)
+	compileOnly 'curse.maven:mystical-agriculture-246640:9291672'
+	compileOnly 'curse.maven:cucumber-272335:9459215'
+	if (withMysticalAgriculture) {
+		runtimeOnly 'curse.maven:mystical-agriculture-246640:9291672'
+		runtimeOnly 'curse.maven:cucumber-272335:9459215'
+	}
 }
 
-// This block of code expands all declared replace properties in the specified resource targets.
-// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
-// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
-// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 tasks.withType(ProcessResources).configureEach {
-	var replaceProperties = [
-			version           : version,
-	]
-	inputs.properties replaceProperties
-
-	filesMatching(['META-INF/neoforge.mods.toml']) {
-		expand replaceProperties
-	}
+	def modMetadata = [version: project.version, minecraft_version: minecraft_version, neoforge_version: neoforge_version]
+	inputs.properties modMetadata
+	filesMatching('META-INF/neoforge.mods.toml') { expand modMetadata }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+	options.encoding = 'UTF-8'
 }
 
-// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
-idea {
-	module {
-		downloadSources = true
-		downloadJavadoc = true
-	}
+tasks.named('jar', Jar) {
+	from('LICENSE')
 }

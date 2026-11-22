@@ -9,7 +9,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -34,8 +34,8 @@ public class GrassLootModifier extends LootModifier {
 	private final List<Entry> entries;
 	private final int totalWeight;
 
-	public GrassLootModifier(LootItemCondition[] conditionsIn, boolean reset, double chance, List<Entry> entries) {
-		super(conditionsIn);
+	public GrassLootModifier(LootItemCondition[] conditionsIn, int priority, boolean reset, double chance, List<Entry> entries) {
+		super(conditionsIn, priority);
 		this.reset = reset;
 		this.chance = chance;
 		this.entries = entries;
@@ -79,10 +79,10 @@ public class GrassLootModifier extends LootModifier {
 		return CODEC;
 	}
 
-	public record Entry(ResourceLocation plantId, int minStat, int maxStat, int weight) {
+	public record Entry(Identifier plantId, int minStat, int maxStat, int weight) {
 
 		public static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				ResourceLocation.CODEC.fieldOf("plant").forGetter(Entry::plantId),
+				Identifier.CODEC.fieldOf("plant").forGetter(Entry::plantId),
 				Codec.INT.fieldOf("min_stat").forGetter(Entry::minStat),
 				Codec.INT.fieldOf("max_stat").forGetter(Entry::maxStat),
 				Codec.INT.fieldOf("weight").forGetter(Entry::weight)

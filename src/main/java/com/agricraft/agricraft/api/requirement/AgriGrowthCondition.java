@@ -7,14 +7,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import java.util.function.Consumer;
 
 public interface AgriGrowthCondition<T> {
 
-	ResourceKey<Registry<AgriGrowthCondition<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(AgriApi.MOD_ID, "growth_condition"));
+	ResourceKey<Registry<AgriGrowthCondition<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath(AgriApi.MOD_ID, "growth_condition"));
 
 	/**
 	 * Checks the condition of the crop at the given position in the given world.

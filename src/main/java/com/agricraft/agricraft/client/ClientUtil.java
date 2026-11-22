@@ -6,10 +6,9 @@ import com.agricraft.agricraft.common.item.JournalItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +27,7 @@ public class ClientUtil {
 	}
 
 	public static void spawnParticlesForPlant(String plantModelId, LevelAccessor level, BlockState state, BlockPos pos) {
-		BakedModel model = Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(ResourceLocation.parse(plantModelId)));
+		BlockStateModel model = AgriCraftClient.getBlockModel(Identifier.parse(plantModelId));
 		spawnParticlesForModel(model, level, state, pos);
 	}
 
@@ -37,11 +36,11 @@ public class ClientUtil {
 		spawnParticlesForPlant(modelId, level, state, pos);
 	}
 
-	public static void spawnParticlesForModel(BakedModel model, LevelAccessor level, BlockState state, BlockPos pos) {
+	public static void spawnParticlesForModel(BlockStateModel model, LevelAccessor level, BlockState state, BlockPos pos) {
 		if (model == null) {
 			return;
 		}
-		TextureAtlasSprite particleIcon = model.getParticleIcon();
+		TextureAtlasSprite particleIcon = model.particleMaterial().sprite();
 		VoxelShape voxelShape = state.getShape(level, pos);
 		voxelShape.forAllBoxes((startX, startY, startZ, endX, endY, endZ) -> {
 			double xBoxes = Math.min(1.0, endX - startX);
@@ -60,8 +59,9 @@ public class ClientUtil {
 						double oy = dy * yBoxes + startY;
 						double oz = dz * zBoxes + startZ;
 						TerrainParticle particle = new TerrainParticle((net.minecraft.client.multiplayer.ClientLevel) level, pos.getX() + ox,
-								pos.getY() + oy, pos.getZ() + oz, dx - 0.5, dy - 0.5, dz - 0.5, state, pos);
-						particle.setSprite(particleIcon);
+								pos.getY() + oy, pos.getZ() + oz, dx - 0.5, dy - 0.5, dz - 0.5, state, pos) {
+							{ this.setSprite(particleIcon); }
+						};
 						Minecraft.getInstance().particleEngine.add(particle);
 					}
 				}
