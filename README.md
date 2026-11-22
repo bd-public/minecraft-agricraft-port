@@ -1,35 +1,20 @@
-# AgriCraft
+# AgriCraft for Minecraft 26.1.2
 
-Agricultural farming extended.
+This repository hosts an unofficial port of [AgriCraft](https://github.com/AgriCraft/AgriCraft)
+for Minecraft Java Edition 26.1.2 only. The original project and its source
+are maintained in the upstream AgriCraft repository. This port is based on
+the [upstream `1.21` branch at `b142a775`](https://github.com/AgriCraft/AgriCraft/commit/b142a775418cc7e95cc8e4fc93a49b1941842bd1).
+See upstream for the official releases and support for other Minecraft versions.
 
-Available on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/agricraft) and [Modrinth](https://modrinth.com/mod/agricraft).
+## Installation
 
-We also have a [Discord server](https://discord.gg/vyrdwWc) where you can ask for support/suggestions or just discuss with us.
+Use Minecraft Java Edition 26.1.2, Java 25, and NeoForge 26.1.2.129 or later
+for Minecraft 26.1.2. Download the AgriCraft JAR from
+[GitHub Releases](https://github.com/bd-public/minecraft-agricraft-port/releases)
+and place it in the NeoForge instance's `mods` folder. For a dedicated server,
+install the same mod versions on the server and clients.
 
-## Available versions
-
-| Version | Support           |
-|---------|-------------------|
-| 1.21    | Supported         |
-| 1.20.4  | Supported         |
-| 1.18    | Major issues only |
-| 1.16    | Unsupported       |
-| 1.12    | Unsupported       |
-| 1.11    | Unsupported       |
-| 1.10    | Unsupported       |
-| 1.9     | Unsupported       |
-| 1.8.9   | Unsupported       |
-| 1.7.10  | Unsupported       |
-
-# Minecraft 26.1.2 port
-
-This development build targets Minecraft Java Edition 26.1.2, NeoForge
-26.1.2.129 or newer for that Minecraft release, and Java 25. It is based on
-the upstream AgriCraft `1.21` branch (`b142a775`).
-
-Build the mod with `./gradlew build` (`.\gradlew.bat build` on Windows). Put
-the JAR from `build/libs` in the NeoForge instance's `mods` folder. For a
-dedicated server, install the same mod versions on the server and clients.
+## Crop sticks and Mystical Agriculture
 
 Crop sticks allow players to walk through them by default. Set
 `crop_sticks_collide = true` under `[core]` in
@@ -44,13 +29,20 @@ essence. Growth respects the crop's biome, crux block, and configured essence
 farmland requirements. The Harvester uses the AgriCraft harvest stages and
 keeps the plant in its crop sticks.
 
-Development runs and in-game tests:
+## Building and testing
+
+Build with `./gradlew build` (`.\gradlew.bat build` on Windows). The JAR is
+written to `build/libs`.
+
+Development commands on Windows:
 
 ```powershell
 .\gradlew.bat runClient -PwithMysticalAgriculture
 .\gradlew.bat runGameTestServer -PgameTests
 .\gradlew.bat runGameTestServer -PgameTests -PwithMysticalAgriculture
 ```
+
+## Port status
 
 The build includes the upstream 1.21.1 generated crop data, textures and
 recipes converted to the 26.1.2 pack formats. The legacy 1.21.1 datagen and
